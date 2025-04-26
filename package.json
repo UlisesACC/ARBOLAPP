@@ -1,0 +1,28 @@
+{
+  "name": "nombre-de-tu-proyecto",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js",
+    "build:tailwind": "tailwindcss -i ./src/input.css -o ./src/output.css --watch",
+    "start:concurrent": "concurrently \"npm run dev\" \"npm run build:tailwind\""
+  },
+  "dependencies": {
+    "dotenv": "^última-versión",
+    "ejs": "^última-versión",
+    "express": "^última-versión",
+    "express-session": "^última-versión",
+    "multer": "^última-versión",
+    "pg": "^última-versión",
+    "tailwindcss": "^última-versión",
+    "@tailwindcss/cli": "^última-versión"
+  },
+  "devDependencies": {
+    "concurrently": "^última-versión",
+    "nodemon": "^última-versión"
+  },
+  "author": "",
+  "license": "ISC"
+}

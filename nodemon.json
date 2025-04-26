@@ -1,0 +1,5 @@
+{
+    "ext": "js,ejs",
+    "watch": ["server.js", "src"]
+}
+  

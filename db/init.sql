@@ -1,0 +1,4 @@
+CREATE TABLE IF NOT EXISTS arbol{
+    id SERIAL PRIMARY KEY,
+    altura INTEGER NOT NULL
+};

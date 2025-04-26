@@ -1,0 +1,38 @@
+services:
+  postgres:
+    image: postgres:15
+    container_name: pg_test
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - "${POSTGRES_PORT}:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - appnet
+
+  nodeapp:
+    build: .
+    container_name: node_app
+    ports:
+      - "${NODE_PORT}:3000"
+    depends_on:
+      - postgres
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_HOST: ${POSTGRES_HOST}
+    volumes:
+      - .:/app
+    networks:
+      - appnet
+
+volumes:
+  pgdata:
+
+networks:
+  appnet:
