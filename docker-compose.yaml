@@ -28,6 +28,7 @@ services:
       POSTGRES_HOST: ${POSTGRES_HOST}
     volumes:
       - .:/app
+      - /app/node_modules
     networks:
       - appnet
 
