@@ -1,6 +1,8 @@
 require("dotenv").config();
 const express = require("express");
 const app = express();
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 const path = require("path");
 const port = process.env.PORT || 3000;
 const { Pool } = require("pg");
@@ -226,6 +228,34 @@ app.post('/nueva_especie', upload.single('fotografia'), async (req, res) => {
   } catch (err) {
     console.error('Error registrando especie:', err);
     res.status(500).send('Error registrando especie');
+  }
+});
+// para las subespecies
+// Mostrar el formulario para nueva subespecie
+app.get('/nueva_subespecie', async (req, res) => {
+  try {
+    const especiesResult = await db.query('SELECT id_especie, nombre FROM Especies ORDER BY nombre');
+    res.render('subespecies/new_subespecies', { especies: especiesResult.rows });
+  } catch (err) {
+    console.error('Error cargando formulario de subespecies:', err);
+    res.status(500).send('Error cargando formulario');
+  }
+});
+
+// Guardar nueva subespecie
+app.post('/nueva_subespecie', async (req, res) => {
+  try {
+    const { id_especie, nombre_subespecie } = req.body;
+
+    await db.query(`
+      INSERT INTO Subespecies (id_especie, nombre)
+      VALUES ($1, $2)
+    `, [id_especie, nombre_subespecie]);
+
+    res.redirect('/nueva_subespecie'); // Redirigir a la misma página o a donde tú prefieras
+  } catch (err) {
+    console.error('Error registrando subespecie:', err);
+    res.status(500).send('Error registrando subespecie');
   }
 });
 
