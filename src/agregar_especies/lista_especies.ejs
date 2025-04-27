@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Lista de Especies</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+</head>
+
+<body class="bg-green-50 min-h-screen flex flex-col">
+
+  <!-- NAVBAR -->
+  <nav class="bg-white shadow-md sticky top-0 z-50">
+    <div class="container mx-auto px-4 py-4 flex items-center justify-between">
+      <div class="text-xl font-bold text-green-700">🎄 Arbol App 🎄</div>
+      <ul class="flex space-x-6 text-gray-600 font-medium">
+        <li><a href="/" class="hover:text-green-600 transition">Inicio</a></li>
+        <li><a href="/formulario" class="hover:text-green-600 transition">Registrar Árbol</a></li>
+        <li><a href="/lista_especies" class="hover:text-green-600 transition">Lista de Especies</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- CONTENIDO -->
+  <main class="container mx-auto px-4 py-8">
+    <h1 class="text-3xl font-bold text-green-700 mb-6 text-center">Lista de Especies</h1>
+
+    <div class="w-full max-w-6xl mx-auto">
+      <div class="flex justify-between mb-4">
+        <input type="text" id="buscador" placeholder="Buscar especie..."
+          class="w-1/2 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500">
+        <a href="/nueva_especie"
+          class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg transition">
+          + Nueva Especie
+        </a>
+      </div>
+
+      <div class="overflow-x-auto">
+        <table class="min-w-full bg-white rounded-xl overflow-hidden shadow-md">
+          <thead class="bg-green-600 text-white">
+            <tr>
+              <th class="py-3 px-6 text-left">Nombre</th>
+              <th class="py-3 px-6 text-left">Descripción</th>
+              <th class="py-3 px-6 text-center">Foto</th>
+              <th class="py-3 px-6 text-center">Acciones</th>
+            </tr>
+          </thead>
+          <tbody id="tablaEspecies">
+            <% especies.forEach(especie => { %>
+              <tr class="border-b hover:bg-green-50 transition">
+                <td class="py-4 px-6"><%= especie.nombre %></td>
+                <td class="py-4 px-6"><%= especie.descripcion ? especie.descripcion.substring(0, 50) + '...' : '' %></td>
+                <td class="py-4 px-6 text-center">
+                  <% if (especie.fotografia) { %>
+                    <img src="/uploads/<%= especie.fotografia %>" alt="Foto" class="h-16 mx-auto rounded-lg shadow">
+                  <% } else { %>
+                    Sin foto
+                  <% } %>
+                </td>
+                <td class="py-4 px-6 flex justify-center gap-2">
+                  <form action="/eliminar_especie/<%= especie.id_especie %>" method="POST"
+                    onsubmit="return confirmarEliminar(event)">
+                    <button type="submit"
+                      class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-lg transition">
+                      Eliminar
+                    </button>
+                  </form>
+                  <a href="/modificar_especie/<%= especie.id_especie %>"
+                    class="bg-yellow-400 hover:bg-yellow-500 text-white px-3 py-1 rounded-lg transition">
+                    Modificar
+                  </a>
+                </td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+
+  <!-- SCRIPTS -->
+  <script>
+    // Filtrado dinámico
+    const buscador = document.getElementById('buscador');
+    buscador.addEventListener('keyup', function () {
+      const filtro = buscador.value.toLowerCase();
+      const filas = document.querySelectorAll('#tablaEspecies tr');
+      filas.forEach(fila => {
+        const texto = fila.innerText.toLowerCase();
+        if (texto.includes(filtro)) {
+          fila.style.display = '';
+          anime({
+            targets: fila,
+            opacity: [0, 1],
+            duration: 500,
+            easing: 'easeOutExpo'
+          });
+        } else {
+          fila.style.display = 'none';
+        }
+      });
+    });
+
+    // Confirmar antes de eliminar
+    function confirmarEliminar(event) {
+      if (!confirm('¿Seguro que quieres eliminar esta especie?')) {
+        event.preventDefault();
+      }
+    }
+  </script>
+</body>
+
+</html>
