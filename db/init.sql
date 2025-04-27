@@ -68,7 +68,7 @@ CREATE TABLE Zonas (
     colonia VARCHAR(100),
     calle VARCHAR(255),
     numero VARCHAR(20),
-    codigo_postal INT CHECK (codigo_postal >= 10000 AND codigo_postal <= 99999),
+    codigo_postal INT CHECK (codigo_postal >= 00000 AND codigo_postal <= 99999),
     latitud DECIMAL(10,6),
     longitud DECIMAL(10,6)
 );
