@@ -26,7 +26,8 @@ CREATE TABLE Especies (
     id_forma_hoja INT REFERENCES DescripcionesFormaHoja(id_forma_hoja) ON DELETE SET NULL,
     id_forma_flor INT REFERENCES DescripcionesFormaFlor(id_forma_flor) ON DELETE SET NULL,
     id_origen INT REFERENCES DescripcionesOrigen(id_origen) ON DELETE SET NULL,
-    fotografia TEXT
+    fotografia TEXT,
+    descripcion TEXT
 );
 
 CREATE TABLE Subespecies (
