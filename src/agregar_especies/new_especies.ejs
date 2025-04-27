@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js"></script>
+    <title>Agregar Nueva Especie</title>
+</head>
+
+<body class="bg-gray-100 min-h-screen flex flex-col justify-between">
+    <!-- Barra de navegación -->
+    <nav class="bg-white shadow-md">
+        <div class="container mx-auto px-4 py-4 flex items-center justify-between">
+            <div class="text-2xl font-bold text-green-700" id="logo">🎄 Arbol App 🎄</div>
+            <ul class="flex space-x-6 text-gray-600 font-medium">
+                <li><a href="/" class="hover:text-green-600">Inicio</a></li>
+                <li><a href="/nueva_especie" class="hover:text-green-600">Agregar Arbol</a></li>
+            </ul>
+        </div>
+    </nav>
+    <!-- Contenido principal -->
+    <main class="flex-grow container mx-auto px-4 py-10 flex items-center justify-center">
+        <div id="formulario-especie" class="bg-white p-8 rounded-xl shadow-lg w-full max-w-md text-center">
+            <h1 id="titulo" class="text-3x3 font-bold mb-6 text-green-700">🌱 Formulario para agregar nuevas especies 🌱</h1>
+            <!-- Aquí puedes agregar el formulario real si lo necesitas -->
+            <p class="text-gray-600">Completa los datos para registrar una nueva especie.</p>
+        </div>
+    </main>
+    <script>
+        // Animación con animejs para el título y el formulario
+        anime({
+            targets: '#titulo',
+            translateY: [-50, 0],
+            opacity: [0, 1],
+            duration: 1200,
+            easing: 'easeOutExpo'
+        });
+        anime({
+            targets: '#formulario-especie',
+            scale: [0.9, 1],
+            opacity: [0, 1],
+            delay: 400,
+            duration: 1000,
+            easing: 'easeOutElastic(1, .8)'
+        });
+    </script>
+</body>
+
+</html>

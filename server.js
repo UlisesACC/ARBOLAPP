@@ -15,8 +15,6 @@ const db = new Pool({
   database: process.env.POSTGRES_DB
 });
 
-// NO pongas conesctarDB(); aquí
-// porque wait-for-postgres.js ya se encarga de eso
 
 // configuraciones Express
 app.set('view engine', 'ejs');
@@ -25,6 +23,10 @@ app.set('views', path.join(__dirname, 'src'));
 // rutas
 app.get('/', (req, res) => {
   res.render('inicio/index');
+});
+
+app.get('/nueva_especie', (req, res) => {
+  res.render('agregar_especies/new_especies');
 });
 
 app.get('/formulario', async (req, res) => {
