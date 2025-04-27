@@ -59,6 +59,18 @@ CREATE TABLE Usuarios (
     fotografia TEXT
 );
 
+/* Zonas y Localización 🗺️ */
+-- Zonas
+CREATE TABLE Zonas (
+    id_zona SERIAL PRIMARY KEY,
+    alcaldia VARCHAR(100),
+    colonia VARCHAR(100),
+    calle VARCHAR(255),
+    numero VARCHAR(20),
+    latitud DECIMAL(10,6),
+    longitud DECIMAL(10,6)
+);
+
 -- Brigadas
 CREATE TABLE Brigadas (
     id_brigada SERIAL PRIMARY KEY,
@@ -113,17 +125,6 @@ CREATE TABLE ExpertosEducacion (
 CREATE TABLE Ciudadanos (
     id_ciudadano SERIAL PRIMARY KEY,
     id_usuario INT REFERENCES Usuarios(id_usuario) ON DELETE CASCADE
-);
-/* Zonas y Localización 🗺️ */
--- Zonas
-CREATE TABLE Zonas (
-    id_zona SERIAL PRIMARY KEY,
-    alcaldia VARCHAR(100),
-    colonia VARCHAR(100),
-    calle VARCHAR(255),
-    numero VARCHAR(20),
-    latitud DECIMAL(10,6),
-    longitud DECIMAL(10,6)
 );
 
 /* Árboles 🌳 y seguimientos */
