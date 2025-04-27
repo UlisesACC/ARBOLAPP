@@ -1,51 +1,168 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js"></script>
-    <title>Agregar Nueva Especie</title>
+  <meta charset="UTF-8">
+  <title>Agregar Nueva Especie</title>
+  <!-- TailwindCSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Anime.js CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+
+  <style>
+    .hidden { display: none; }
+    .selected {
+      background-color: #10B981 !important; /* Verde Tailwind Emerald 500 */
+      transform: scale(1.05);
+    }
+  </style>
 </head>
+<body class="bg-green-50 min-h-screen flex items-center justify-center p-8">
+  <div class="bg-white shadow-2xl rounded-2xl p-10 w-full max-w-2xl">
+    <h1 class="text-3xl font-bold text-center text-green-700 mb-6">Agregar Nueva Especie</h1>
 
-<body class="bg-gray-100 min-h-screen flex flex-col justify-between">
-    <!-- Barra de navegación -->
-    <nav class="bg-white shadow-md">
-        <div class="container mx-auto px-4 py-4 flex items-center justify-between">
-            <div class="text-2xl font-bold text-green-700" id="logo">🎄 Arbol App 🎄</div>
-            <ul class="flex space-x-6 text-gray-600 font-medium">
-                <li><a href="/" class="hover:text-green-600">Inicio</a></li>
-                <li><a href="/nueva_especie" class="hover:text-green-600">Agregar Arbol</a></li>
-            </ul>
-        </div>
-    </nav>
-    <!-- Contenido principal -->
-    <main class="flex-grow container mx-auto px-4 py-10 flex items-center justify-center">
-        <div id="formulario-especie" class="bg-white p-8 rounded-xl shadow-lg w-full max-w-md text-center">
-            <h1 id="titulo" class="text-3x3 font-bold mb-6 text-green-700">🌱 Formulario para agregar nuevas especies 🌱</h1>
-            <!-- Aquí puedes agregar el formulario real si lo necesitas -->
-            <p class="text-gray-600">Completa los datos para registrar una nueva especie.</p>
-        </div>
-    </main>
-    <script>
-        // Animación con animejs para el título y el formulario
+    <form action="/nueva_especie" method="POST" enctype="multipart/form-data" class="space-y-6">
+      <div>
+        <label for="nombre" class="block text-gray-700 font-semibold mb-2">Nombre de la especie:</label>
+        <input type="text" name="nombre" id="nombre" required
+          class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500">
+      </div>
+
+      <div class="text-center space-x-2">
+        <button id="btn-hoja" type="button" onclick="mostrarSelect('hoja')"
+          class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-lg transition">
+          Por Forma de Hoja
+        </button>
+        <button id="btn-flor" type="button" onclick="mostrarSelect('flor')"
+          class="bg-pink-500 hover:bg-pink-600 text-white font-bold py-2 px-4 rounded-lg transition">
+          Por Forma de Flor
+        </button>
+        <button id="btn-origen" type="button" onclick="mostrarSelect('origen')"
+          class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg transition">
+          Por Origen
+        </button>
+      </div>
+
+      <!-- Por defecto aparece la hoja -->
+      <div id="seleccion-hoja">
+        <label for="id_forma_hoja" class="block text-gray-700 font-semibold mb-2 mt-4">Forma de la hoja:</label>
+        <input type="text" name="forma_hoja" id="id_forma_hoja" list="lista-hojas"
+          class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500">
+        <datalist id="lista-hojas">
+          <% hojas.forEach(hoja => { %>
+            <option value="<%= hoja.forma_hoja %>">
+          <% }) %>
+        </datalist>
+      </div>
+
+      <div id="seleccion-flor" class="hidden">
+        <label for="id_forma_flor" class="block text-gray-700 font-semibold mb-2 mt-4">Forma de la flor:</label>
+        <input type="text" name="forma_flor" id="id_forma_flor" list="lista-flores"
+          class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500">
+        <datalist id="lista-flores">
+          <% flores.forEach(flor => { %>
+            <option value="<%= flor.forma_flor %>">
+          <% }) %>
+        </datalist>
+      </div>
+
+      <div id="seleccion-origen" class="hidden">
+        <label for="id_origen" class="block text-gray-700 font-semibold mb-2 mt-4">Origen:</label>
+        <input type="text" name="origen" id="id_origen" list="lista-origenes"
+          class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+        <datalist id="lista-origenes">
+          <% origenes.forEach(origen => { %>
+            <option value="<%= origen.origen %>">
+          <% }) %>
+        </datalist>
+      </div>
+
+      <div>
+        <label for="fotografia" class="block text-gray-700 font-semibold mb-2">Fotografía:</label>
+        <input type="file" name="fotografia" id="fotografia"
+          class="w-full p-3 border border-gray-300 rounded-lg">
+      </div>
+
+      <div>
+        <label for="descripcion" class="block text-gray-700 font-semibold mb-2">Descripción:</label>
+        <textarea name="descripcion" id="descripcion" rows="5"
+          class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"></textarea>
+      </div>
+
+      <button type="submit"
+        class="w-full bg-green-700 hover:bg-green-800 text-white font-bold py-3 rounded-xl transition">
+        Agregar Especie
+      </button>
+    </form>
+  </div>
+
+  <script>
+    function mostrarSelect(opcion) {
+      const hoja = document.getElementById('seleccion-hoja');
+      const flor = document.getElementById('seleccion-flor');
+      const origen = document.getElementById('seleccion-origen');
+
+      hoja.classList.add('hidden');
+      flor.classList.add('hidden');
+      origen.classList.add('hidden');
+
+      // Animación de aparición
+      if (opcion === 'hoja') {
+        hoja.classList.remove('hidden');
         anime({
-            targets: '#titulo',
-            translateY: [-50, 0],
-            opacity: [0, 1],
-            duration: 1200,
-            easing: 'easeOutExpo'
+          targets: '#seleccion-hoja',
+          opacity: [0,1],
+          translateY: [-20, 0],
+          duration: 500,
+          easing: 'easeOutExpo'
         });
+      } else if (opcion === 'flor') {
+        flor.classList.remove('hidden');
         anime({
-            targets: '#formulario-especie',
-            scale: [0.9, 1],
-            opacity: [0, 1],
-            delay: 400,
-            duration: 1000,
-            easing: 'easeOutElastic(1, .8)'
+          targets: '#seleccion-flor',
+          opacity: [0,1],
+          translateY: [-20, 0],
+          duration: 500,
+          easing: 'easeOutExpo'
         });
-    </script>
+      } else if (opcion === 'origen') {
+        origen.classList.remove('hidden');
+        anime({
+          targets: '#seleccion-origen',
+          opacity: [0,1],
+          translateY: [-20, 0],
+          duration: 500,
+          easing: 'easeOutExpo'
+        });
+      }
+
+      // Quitar 'selected' a todos los botones
+      document.getElementById('btn-hoja').classList.remove('selected');
+      document.getElementById('btn-flor').classList.remove('selected');
+      document.getElementById('btn-origen').classList.remove('selected');
+
+      // Agregar 'selected' al botón activo
+      if (opcion === 'hoja') {
+        document.getElementById('btn-hoja').classList.add('selected');
+      } else if (opcion === 'flor') {
+        document.getElementById('btn-flor').classList.add('selected');
+      } else if (opcion === 'origen') {
+        document.getElementById('btn-origen').classList.add('selected');
+      }
+
+      // Animar el botón seleccionado
+      anime({
+        targets: `.selected`,
+        scale: [1, 1.1],
+        duration: 300,
+        direction: 'alternate',
+        easing: 'easeInOutQuad'
+      });
+    }
+
+    // Para que al cargar la página esté seleccionada por defecto "hoja"
+    window.onload = function() {
+      mostrarSelect('hoja');
+    }
+  </script>
 </body>
-
 </html>

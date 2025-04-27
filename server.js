@@ -24,10 +24,24 @@ app.set('views', path.join(__dirname, 'src'));
 app.get('/', (req, res) => {
   res.render('inicio/index');
 });
+// nueva especie
+app.get('/nueva_especie', async (req, res) => {
+  try {
+    const hojasResult = await db.query('SELECT * FROM DescripcionesFormaHoja ORDER BY forma_hoja');
+    const floresResult = await db.query('SELECT * FROM DescripcionesFormaFlor ORDER BY forma_flor');
+    const origenesResult = await db.query('SELECT * FROM DescripcionesOrigen ORDER BY origen');
 
-app.get('/nueva_especie', (req, res) => {
-  res.render('agregar_especies/new_especies');
+    res.render('agregar_especies/new_especies', {
+      hojas: hojasResult.rows,
+      flores: floresResult.rows,
+      origenes: origenesResult.rows
+    });
+  } catch (err) {
+    console.error('Error cargando opciones:', err);
+    res.status(500).send('Error cargando formulario');
+  }
 });
+
 
 app.get('/formulario', async (req, res) => {
   try {
@@ -110,6 +124,36 @@ app.post('/registrar_arbol', upload.single('fotografia'), async (req, res) => {
   } catch (err) {
     console.error('Error registrando árbol:', err);
     res.status(500).send('Error registrando árbol');
+  }
+});
+//post para guardar la nueva especie
+app.post('/nueva_especie', upload.single('fotografia'), async (req, res) => {
+  try {
+    const { nombre, id_forma_hoja, id_forma_flor, id_origen, descripcion } = req.body;
+    const fotografia = req.file ? req.file.filename : null;
+
+    // Solo uno de los tres debe ir
+    let formaHoja = null;
+    let formaFlor = null;
+    let origen = null;
+
+    if (id_forma_hoja) {
+      formaHoja = id_forma_hoja;
+    } else if (id_forma_flor) {
+      formaFlor = id_forma_flor;
+    } else if (id_origen) {
+      origen = id_origen;
+    }
+
+    await db.query(`
+      INSERT INTO Especies (nombre, id_forma_hoja, id_forma_flor, id_origen, fotografia, descripcion)
+      VALUES ($1, $2, $3, $4, $5, $6)
+    `, [nombre, formaHoja, formaFlor, origen, fotografia, descripcion]);
+
+    res.redirect('/');
+  } catch (err) {
+    console.error('Error registrando especie:', err);
+    res.status(500).send('Error registrando especie');
   }
 });
 
