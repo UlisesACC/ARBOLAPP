@@ -26,13 +26,18 @@ app.set('views', path.join(__dirname, 'src'));
 app.get('/', (req, res) => {
   res.render('inicio/index');
 });
-
+// <!--📚modificando esto -->
 app.get('/formulario', async (req, res) => {
   try {
     const especiesResult = await db.query('SELECT * FROM Especies ORDER BY nombre');
-    res.render('formulario_arbol/arbol', { especies: especiesResult.rows });
+    const zonasResult = await db.query('SELECT * FROM Zonas ORDER BY alcaldia, colonia');
+
+    res.render('formulario_arbol/arbol', { 
+      especies: especiesResult.rows, 
+      zonas: zonasResult.rows
+    });
   } catch (err) {
-    console.error('Error cargando especies:', err);
+    console.error('Error cargando formulario:', err);
     res.status(500).send('Error cargando formulario');
   }
 });
