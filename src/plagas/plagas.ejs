@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro de Plagas</title>
+</head>
+<body>
+
+    <h1>🌳 Gestión de Plagas en Árboles 🌳</h1>
+
+    <fieldset>
+        <legend>🐛 Registrar Plaga en Árbol</legend>
+        <form>
+            <label for="arbol">Árbol afectado:</label>
+            <select name="arbol" id="arbol" required>
+                <option value="">Selecciona un árbol</option>
+                <option value="1">Árbol 1 - Ahuehuete</option>
+                <option value="2">Árbol 2 - Jacaranda</option>
+                <option value="3">Árbol 3 - Encino</option>
+            </select>
+
+            <label for="plaga">Tipo de Plaga:</label>
+            <select name="plaga" id="plaga" required>
+                <option value="">Selecciona una plaga</option>
+                <option value="insectos">Insectos</option>
+                <option value="hongos">Hongos</option>
+                <option value="bacterias">Bacterias</option>
+                <option value="desconocida">Desconocida</option>
+            </select>
+
+            <label for="nivel">Nivel de Afectación:</label>
+            <select name="nivel" id="nivel" required>
+                <option value="leve">Leve</option>
+                <option value="moderado">Moderado</option>
+                <option value="grave">Grave</option>
+            </select>
+
+            <label for="fecha">Fecha de Detección:</label>
+            <input type="date" name="fecha" id="fecha" required>
+
+            <label for="tratamiento">Tratamiento Aplicado:</label>
+            <textarea name="tratamiento" id="tratamiento" rows="3" placeholder="¿Qué tratamiento se aplicó?"></textarea>
+
+            <button type="submit">Registrar Plaga</button>
+        </form>
+    </fieldset>
+
+</body>
+</html>
