@@ -42,7 +42,10 @@ app.get('/nueva_especie', async (req, res) => {
     res.status(500).send('Error cargando formulario');
   }
 });
-
+//renderizando el formulario de plagas
+app.get('/formulario_plagas', (req, res) => {
+  res.render('plagas/plagas');
+});
 //formulario de arbol
 app.get('/formulario', async (req, res) => {
   try {
