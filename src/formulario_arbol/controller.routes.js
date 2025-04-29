@@ -1,11 +1,17 @@
-//formulario de arbol
-app.get('/formulario', async (req, res) => {
+const express = require('express');
+const router = express.Router();
+const db = require('../db');
+const multer = require('multer');
+const upload = multer({ dest: 'uploads/' });
+
+// formulario de árbol
+router.get('/formulario', async (req, res) => {
   try {
     const especiesResult = await db.query('SELECT * FROM Especies ORDER BY nombre');
     const zonasResult = await db.query('SELECT * FROM Zonas ORDER BY alcaldia, colonia');
 
-    res.render('formulario_arbol/arbol', { 
-      especies: especiesResult.rows, 
+    res.render('formulario_arbol/arbol', {
+      especies: especiesResult.rows,
       zonas: zonasResult.rows
     });
   } catch (err) {
@@ -13,9 +19,9 @@ app.get('/formulario', async (req, res) => {
     res.status(500).send('Error cargando formulario');
   }
 });
-//mostrando los arboles
-// Mostrar lista de árboles
-app.get('/lista_arboles', async (req, res) => {
+
+// mostrar lista de árboles
+router.get('/lista_arboles', async (req, res) => {
   try {
     const arbolesResult = await db.query(`
       SELECT 
@@ -42,9 +48,8 @@ app.get('/lista_arboles', async (req, res) => {
   }
 });
 
-
-//Registrando el arbol 
-app.post('/registrar_arbol', upload.single('fotografia'), async (req, res) => {
+// registrar árbol
+router.post('/registrar_arbol', upload.single('fotografia'), async (req, res) => {
   try {
     const {
       numero_arbol,
@@ -63,11 +68,10 @@ app.post('/registrar_arbol', upload.single('fotografia'), async (req, res) => {
       observaciones
     } = req.body;
 
-    const fotografia = req.file ? req.file.path : null; // path de la foto si sube
+    const fotografia = req.file ? req.file.path : null;
 
     let id_zona;
 
-    // Buscar zona existente
     const zonaExistente = await db.query(
       `SELECT id_zona FROM Zonas 
        WHERE alcaldia = $1 AND colonia = $2 AND calle = $3 AND numero = $4 AND codigo_postal = $5`,
@@ -77,7 +81,6 @@ app.post('/registrar_arbol', upload.single('fotografia'), async (req, res) => {
     if (zonaExistente.rows.length > 0) {
       id_zona = zonaExistente.rows[0].id_zona;
     } else {
-      // Insertar nueva zona
       const nuevaZona = await db.query(
         `INSERT INTO Zonas (alcaldia, colonia, calle, numero, codigo_postal, latitud, longitud) 
          VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING id_zona`,
@@ -86,7 +89,6 @@ app.post('/registrar_arbol', upload.single('fotografia'), async (req, res) => {
       id_zona = nuevaZona.rows[0].id_zona;
     }
 
-    // Insertar árbol completo
     await db.query(
       `INSERT INTO Arboles 
        (id_arbol, id_especie, id_subespecie, id_zona, grosor_tronco, altura, grosor_copa, fotografia, observaciones)
@@ -94,32 +96,29 @@ app.post('/registrar_arbol', upload.single('fotografia'), async (req, res) => {
       [numero_arbol, especie, subespecie, id_zona, grosor_tronco || null, altura || null, grosor_copa || null, fotografia, observaciones]
     );
 
-    res.redirect('/formulario');
+    res.redirect('/arboles/formulario');
   } catch (err) {
     console.error('Error registrando árbol:', err);
     res.status(500).send('Error registrando árbol');
   }
 });
 
-//eliminando arbol y modificandolo
-// Eliminar un árbol 
-app.post('/eliminar_arbol/:id', async (req, res) => {
+// eliminar árbol
+router.post('/eliminar_arbol/:id', async (req, res) => {
   try {
     const { id } = req.params;
     await db.query('DELETE FROM Arboles WHERE id_arbol = $1', [id]);
-    res.redirect('/lista_arboles');
+    res.redirect('/arboles/lista_arboles');
   } catch (err) {
     console.error('Error eliminando árbol:', err);
     res.status(500).send('Error eliminando árbol');
   }
 });
 
-
-// Mostrar formulario para modificar árbol
-app.get('/modificar_arbol/:id', async (req, res) => {
+// mostrar formulario de modificación
+router.get('/modificar_arbol/:id', async (req, res) => {
   try {
     const { id } = req.params;
-    
     const arbolResult = await db.query('SELECT * FROM Arboles WHERE id_arbol = $1', [id]);
     const especiesResult = await db.query('SELECT id_especie, nombre FROM Especies ORDER BY nombre');
     const subespeciesResult = await db.query('SELECT id_subespecie, nombre FROM Subespecies ORDER BY nombre');
@@ -139,22 +138,20 @@ app.get('/modificar_arbol/:id', async (req, res) => {
   }
 });
 
-// Guardar cambios de un árbol
-app.post('/modificar_arbol/:id', upload.single('fotografia'), async (req, res) => {
+// guardar cambios
+router.post('/modificar_arbol/:id', upload.single('fotografia'), async (req, res) => {
   try {
     const { id } = req.params;
     const { id_especie, id_subespecie, grosor_tronco, altura, grosor_copa, observaciones } = req.body;
     const fotografia = req.file ? req.file.filename : null;
 
     if (fotografia) {
-      // Si subió nueva foto, actualizamos también la fotografía
       await db.query(`
         UPDATE Arboles
         SET id_especie = $1, id_subespecie = $2, grosor_tronco = $3, altura = $4, grosor_copa = $5, observaciones = $6, fotografia = $7
         WHERE id_arbol = $8
       `, [id_especie, id_subespecie, grosor_tronco || null, altura || null, grosor_copa || null, observaciones, fotografia, id]);
     } else {
-      // Si no subió nueva foto, no cambiamos la fotografía
       await db.query(`
         UPDATE Arboles
         SET id_especie = $1, id_subespecie = $2, grosor_tronco = $3, altura = $4, grosor_copa = $5, observaciones = $6
@@ -162,9 +159,11 @@ app.post('/modificar_arbol/:id', upload.single('fotografia'), async (req, res) =
       `, [id_especie, id_subespecie, grosor_tronco || null, altura || null, grosor_copa || null, observaciones, id]);
     }
 
-    res.redirect('/lista_arboles');
+    res.redirect('/arboles/lista_arboles');
   } catch (err) {
     console.error('Error actualizando árbol:', err);
     res.status(500).send('Error actualizando árbol');
   }
 });
+
+module.exports = router;

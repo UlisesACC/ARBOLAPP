@@ -5,17 +5,8 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 const path = require("path");
 const port = process.env.PORT || 3000;
-const { Pool } = require("pg");
 const multer = require('multer');
 const upload = multer({ dest: 'uploads/' });
-
-const db = new Pool({
-  host: process.env.POSTGRES_HOST,
-  port: process.env.POSTGRES_PORT,
-  user: process.env.POSTGRES_USER,
-  password: process.env.POSTGRES_PASSWORD,
-  database: process.env.POSTGRES_DB
-});
 
 // configuraciones Express
 app.set('view engine', 'ejs');
@@ -27,3 +18,7 @@ app.listen(port, () => {
 });
 //haciendo uso de los controllers
 app.use('/', require('./src/inicio/controller.routes'));
+app.use('/especies', require('./src/agregar_especies/controller.routes'));
+app.use('/arboles', require('./src/formulario_arbol/controller.routes'));
+app.use('/plagas', require('./src/plagas/controller.routes'));
+app.use('/subespecies', require('./src/subespecies/controller.routes'));

@@ -1,17 +1,24 @@
-//renderizando las subespecies
-app.get('/subespecies/:id_especie', async (req, res) => {
+const express = require('express');
+const router = express.Router();
+const db = require('../db');
+
+// Devolver subespecies según id de especie (respuesta en JSON)
+router.get('/subespecies/:id_especie', async (req, res) => {
   try {
     const { id_especie } = req.params;
-    const subespeciesResult = await db.query('SELECT * FROM Subespecies WHERE id_especie = $1', [id_especie]);
+    const subespeciesResult = await db.query(
+      'SELECT * FROM Subespecies WHERE id_especie = $1',
+      [id_especie]
+    );
     res.json(subespeciesResult.rows);
   } catch (err) {
     console.error(err);
     res.status(500).send('Error al cargar subespecies');
   }
 });
-// para las subespecies
-// Mostrar el formulario para nueva subespecie
-app.get('/nueva_subespecie', async (req, res) => {
+
+// Mostrar formulario para nueva subespecie
+router.get('/nueva_subespecie', async (req, res) => {
   try {
     const especiesResult = await db.query('SELECT id_especie, nombre FROM Especies ORDER BY nombre');
     res.render('subespecies/new_subespecies', { especies: especiesResult.rows });
@@ -22,7 +29,7 @@ app.get('/nueva_subespecie', async (req, res) => {
 });
 
 // Guardar nueva subespecie
-app.post('/nueva_subespecie', async (req, res) => {
+router.post('/nueva_subespecie', async (req, res) => {
   try {
     const { id_especie, nombre_subespecie } = req.body;
 
@@ -31,16 +38,15 @@ app.post('/nueva_subespecie', async (req, res) => {
       VALUES ($1, $2)
     `, [id_especie, nombre_subespecie]);
 
-    res.redirect('/nueva_subespecie'); // Redirigir a la misma página o a donde tú prefieras
+    res.redirect('/subespecies/nueva_subespecie');
   } catch (err) {
     console.error('Error registrando subespecie:', err);
     res.status(500).send('Error registrando subespecie');
   }
 });
 
-//Eliminar y modificar subespecies
 // Mostrar lista de subespecies
-app.get('/lista_subespecies', async (req, res) => {
+router.get('/lista_subespecies', async (req, res) => {
   try {
     const subespeciesResult = await db.query(`
       SELECT s.id_subespecie, s.nombre AS nombre_subespecie, e.nombre AS nombre_especie
@@ -56,20 +62,22 @@ app.get('/lista_subespecies', async (req, res) => {
 });
 
 // Eliminar subespecie
-app.post('/eliminar_subespecie/:id', async (req, res) => {
+router.post('/eliminar_subespecie/:id', async (req, res) => {
   try {
     const { id } = req.params;
     await db.query('DELETE FROM Subespecies WHERE id_subespecie = $1', [id]);
-    res.redirect('/lista_subespecies');
+    res.redirect('/subespecies/lista_subespecies');
   } catch (err) {
     console.error('Error eliminando subespecie:', err);
     res.status(500).send('Error eliminando subespecie');
   }
 });
+
 // Mostrar formulario para modificar subespecie
-app.get('/modificar_subespecie/:id', async (req, res) => {
+router.get('/modificar_subespecie/:id', async (req, res) => {
   try {
     const { id } = req.params;
+
     const subespecieResult = await db.query(`
       SELECT s.id_subespecie, s.nombre AS nombre_subespecie, e.id_especie, e.nombre AS nombre_especie
       FROM Subespecies s
@@ -83,7 +91,7 @@ app.get('/modificar_subespecie/:id', async (req, res) => {
       return res.status(404).send('Subespecie no encontrada');
     }
 
-    res.render('subespecies/modificar_subespecie', { 
+    res.render('subespecies/modificar_subespecie', {
       subespecie: subespecieResult.rows[0],
       especies: especiesResult.rows
     });
@@ -93,8 +101,8 @@ app.get('/modificar_subespecie/:id', async (req, res) => {
   }
 });
 
-// Guardar cambios de la subespecie
-app.post('/modificar_subespecie/:id', async (req, res) => {
+// Guardar cambios de subespecie
+router.post('/modificar_subespecie/:id', async (req, res) => {
   try {
     const { id } = req.params;
     const { id_especie, nombre_subespecie } = req.body;
@@ -105,9 +113,11 @@ app.post('/modificar_subespecie/:id', async (req, res) => {
       WHERE id_subespecie = $3
     `, [id_especie, nombre_subespecie, id]);
 
-    res.redirect('/lista_subespecies');
+    res.redirect('/subespecies/lista_subespecies');
   } catch (err) {
     console.error('Error actualizando subespecie:', err);
     res.status(500).send('Error actualizando subespecie');
   }
 });
+
+module.exports = router;
