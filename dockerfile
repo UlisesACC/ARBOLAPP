@@ -9,8 +9,9 @@ COPY package.json ./
 RUN npm install
 
 # Ahora sí copia TODO tu proyecto, excepto node_modules gracias al .dockerignore
-COPY . .
+#COPY . .
 
 EXPOSE 3000
 
-CMD ["node", "wait-for-postgres.js"]
+#CMD ["node", "wait-for-postgres.js"]
+CMD ["npm", "run","dev"]

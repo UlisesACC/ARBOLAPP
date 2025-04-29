@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lista de Árboles</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js"></script>
+</head>
+<body class="bg-gray-100 min-h-screen flex flex-col justify-between">
+
+  <!-- Barra de navegación -->
+  <nav class="bg-white shadow-md">
+    <div class="container mx-auto px-4 py-4 flex items-center justify-between">
+      <div id="logo" class="text-2xl font-bold text-green-700">🎄 Arbol App 🎄</div>
+      <ul class="flex space-x-6 text-gray-600 font-medium">
+        <li><a href="/" class="hover:text-green-600">Inicio</a></li>
+        <li><a href="/formulario" class="hover:text-green-600">Registrar Árbol</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Contenido principal -->
+  <main class="flex-grow container mx-auto px-4 py-10">
+    <h1 id="titulo" class="text-3xl font-bold mb-8 text-center text-green-700">🌳 Lista de Árboles 🌳</h1>
+
+    <div class="overflow-x-auto">
+      <table id="tabla-arboles" class="min-w-full bg-white rounded-xl shadow-lg">
+        <thead class="bg-green-500 text-white">
+          <tr>
+            <th class="py-3 px-6 text-left">ID Árbol</th>
+            <th class="py-3 px-6 text-left">Especie</th>
+            <th class="py-3 px-6 text-left">Subespecie</th>
+            <th class="py-3 px-6 text-left">Alcaldía</th>
+            <th class="py-3 px-6 text-left">Colonia</th>
+            <th class="py-3 px-6 text-left">Grosor Tronco (cm)</th>
+            <th class="py-3 px-6 text-left">Altura (m)</th>
+            <th class="py-3 px-6 text-left">Grosor Copa (m)</th>
+            <th class="py-3 px-6 text-left">Observaciones</th>
+            <th class="py-3 px-6 text-center">Acciones</th>
+          </tr>
+        </thead>
+        <tbody class="text-gray-700">
+          <% arboles.forEach((arbol, index) => { %>
+            <tr class="border-b fila-arbol" style="opacity:0;">
+              <td class="py-4 px-6"><%= arbol.id_arbol %></td>
+              <td class="py-4 px-6"><%= arbol.nombre_especie || '-' %></td>
+              <td class="py-4 px-6"><%= arbol.nombre_subespecie || '-' %></td>
+              <td class="py-4 px-6"><%= arbol.alcaldia || '-' %></td>
+              <td class="py-4 px-6"><%= arbol.colonia || '-' %></td>
+              <td class="py-4 px-6"><%= arbol.grosor_tronco || '-' %></td>
+              <td class="py-4 px-6"><%= arbol.altura || '-' %></td>
+              <td class="py-4 px-6"><%= arbol.grosor_copa || '-' %></td>
+              <td class="py-4 px-6"><%= arbol.observaciones || '-' %></td>
+              <td class="py-4 px-6 text-center flex gap-2 justify-center">
+                <form method="POST" action="/eliminar_arbol/<%= arbol.id_arbol %>">
+                  <button type="submit" class="boton-eliminar bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-full">
+                    Eliminar
+                  </button>
+                </form>
+                <a href="/modificar_arbol/<%= arbol.id_arbol %>" class="boton-editar bg-yellow-400 hover:bg-yellow-500 text-white font-bold py-2 px-4 rounded-full">
+                  Editar
+                </a>
+              </td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-white shadow-inner py-4 mt-8">
+    <div class="container mx-auto px-4 text-center text-gray-600">
+      <p>Consulta también: 
+        <a href="https://bioteca.biodiversidad.gob.mx/janium/Documentos/1480.pdf" target="_blank" class="text-green-600 hover:underline font-semibold">
+          Flora del Valle de México
+        </a>
+      </p>
+    </div>
+  </footer>
+
+  <!-- Animaciones Anime.js -->
+  <script>
+    // Animar el logo
+    anime({
+      targets: "#logo",
+      translateY: [-30, 0],
+      opacity: [0, 1],
+      duration: 1000,
+      easing: "easeOutElastic(1, .8)"
+    });
+
+    // Animar el título
+    anime({
+      targets: "#titulo",
+      scale: [0.7, 1],
+      opacity: [0, 1],
+      delay: 400,
+      duration: 1000,
+      easing: "easeOutExpo"
+    });
+
+    // Animar filas de la tabla una por una
+    anime({
+      targets: ".fila-arbol",
+      opacity: [0, 1],
+      translateY: [30, 0],
+      delay: anime.stagger(100, { start: 800 }), // Cada fila se anima en cascada
+      duration: 800,
+      easing: "easeOutCubic"
+    });
+
+    // Animar botones eliminar y editar al pasar el mouse
+    document.querySelectorAll('.boton-eliminar, .boton-editar').forEach(boton => {
+      boton.addEventListener('mouseenter', () => {
+        anime({
+          targets: boton,
+          scale: [1, 1.1],
+          duration: 300,
+          easing: "easeOutQuad"
+        });
+      });
+      boton.addEventListener('mouseleave', () => {
+        anime({
+          targets: boton,
+          scale: [1.1, 1],
+          duration: 300,
+          easing: "easeOutQuad"
+        });
+      });
+    });
+  </script>
+
+</body>
+</html>
