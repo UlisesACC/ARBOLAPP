@@ -26,4 +26,4 @@ app.listen(port, () => {
   console.log(`Servidor corriendo en http://localhost:${port}`);
 });
 //haciendo uso de los controllers
-require('./src/inicio/controller')(app);
+app.use('/', require('./src/inicio/controller.routes'));
