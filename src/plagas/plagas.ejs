@@ -7,41 +7,50 @@
 </head>
 <body>
 
-    <h1>🌳 Gestión de Plagas en Árboles 🌳</h1>
+    <h1>Gestión de Plagas en Plagas</h1>
 
     <fieldset>
-        <legend>🐛 Registrar Plaga en Árbol</legend>
+        <legend>Registrar Plaga en Árbol</legend>
         <form>
             <label for="arbol">Árbol afectado:</label>
             <select name="arbol" id="arbol" required>
                 <option value="">Selecciona un árbol</option>
-                <option value="1">Árbol 1 - Ahuehuete</option>
-                <option value="2">Árbol 2 - Jacaranda</option>
-                <option value="3">Árbol 3 - Encino</option>
+                <option value="1">Árbol 1 - Ejemplo</option>
+                <option value="2">Árbol 2 - Ejemplo</option>
             </select>
-
+    
             <label for="plaga">Tipo de Plaga:</label>
             <select name="plaga" id="plaga" required>
                 <option value="">Selecciona una plaga</option>
-                <option value="insectos">Insectos</option>
-                <option value="hongos">Hongos</option>
-                <option value="bacterias">Bacterias</option>
-                <option value="desconocida">Desconocida</option>
+                <option value="Hypsipyla grandella">Barrenador de brotes</option>
+                <option value="Tetranychus spp.">Araña roja</option>
+                <option value="Atta spp.">Hormiga arriera</option>
+                <option value="Phyllophaga spp.">Gallina ciega</option>
+                <option value="Cicadellidae">Chicharritas</option>
+                <option value="Glycaspis brimblecombei">Conchuela del eucalipto</option>
+                <option value="Xyleborus spp., Neoclytus spp.">Barrenador del tronco</option>
+                <option value="Mastigimas spp.">Piojo harinoso</option>
+                <option value="Hyblaea puera">Defoliador de la teca</option>
             </select>
-
-            <label for="nivel">Nivel de Afectación:</label>
-            <select name="nivel" id="nivel" required>
-                <option value="leve">Leve</option>
-                <option value="moderado">Moderado</option>
-                <option value="grave">Grave</option>
+    
+            <label for="infestacion">Grado de Afectación / Infestación:</label>
+            <select name="infestacion" id="infestacion" required>
+                <option value="">Selecciona una opción</option>
+                <option value="sin_plaga">Sin plaga</option>
+                <option value="tronco_leve">Plaga en tronco - Leve</option>
+                <option value="tronco_medio">Plaga en tronco - Medio</option>
+                <option value="tronco_abundante">Plaga en tronco - Abundante</option>
+                <option value="follaje_leve">Plaga en follaje - Leve</option>
+                <option value="follaje_medio">Plaga en follaje - Medio</option>
+                <option value="follaje_abundante">Plaga en follaje - Abundante</option>
             </select>
-
+    
             <label for="fecha">Fecha de Detección:</label>
             <input type="date" name="fecha" id="fecha" required>
-
+    
             <label for="tratamiento">Tratamiento Aplicado:</label>
             <textarea name="tratamiento" id="tratamiento" rows="3" placeholder="¿Qué tratamiento se aplicó?"></textarea>
-
+    
             <button type="submit">Registrar Plaga</button>
         </form>
     </fieldset>
