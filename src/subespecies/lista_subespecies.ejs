@@ -31,7 +31,7 @@
       <div class="flex justify-between mb-4">
         <input type="text" id="buscador" placeholder="Buscar subespecie..."
           class="w-1/2 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500">
-        <a href="/nueva_subespecie"
+        <a href="/subespecies/nueva_subespecie"
           class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg transition">
           + Nueva Subespecie
         </a>
@@ -52,13 +52,13 @@
                 <td class="py-4 px-6"><%= sub.nombre_subespecie %></td>
                 <td class="py-4 px-6"><%= sub.nombre_especie %></td>
                 <td class="py-4 px-6 flex justify-center gap-2">
-                  <form action="/eliminar_subespecie/<%= sub.id_subespecie %>" method="POST" onsubmit="return confirmarEliminar(event)">
+                  <form action="/subespecies/eliminar_subespecie/<%= sub.id_subespecie %>" method="POST" onsubmit="return confirmarEliminar(event)">
                     <button type="submit"
                       class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-lg transition">
                       Eliminar
                     </button>
                   </form>
-                  <a href="/modificar_subespecie/<%= sub.id_subespecie %>"
+                  <a href="/subespecies/modificar_subespecie/<%= sub.id_subespecie %>"
                     class="bg-yellow-400 hover:bg-yellow-500 text-white px-3 py-1 rounded-lg transition">
                     Modificar
                   </a>
