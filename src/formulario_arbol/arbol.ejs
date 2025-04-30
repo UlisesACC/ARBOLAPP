@@ -226,7 +226,7 @@
             const especie_id = document.getElementById("especie").value;
             if (!especie_id) return;
 
-            const respuesta = await fetch(`/subespecies/${especie_id}`);
+            const respuesta = await fetch(`/subespecies/subespecies/${especie_id}`);
             const subespecies = await respuesta.json();
 
             const subespecieSelect = document.getElementById("subespecie");
@@ -253,7 +253,7 @@
 
             coloniaSelect.innerHTML = '<option value="">-- Selecciona una colonia --</option>';
 
-            const zonas = <% - JSON.stringify(zonas) %>; // pasar zonas del server al JS
+            const zonas = <%- JSON.stringify(zonas) %>; // pasar zonas del server al JS
 
             zonas.filter(z => z.alcaldia === alcaldiaSeleccionada)
                 .forEach(z => {
