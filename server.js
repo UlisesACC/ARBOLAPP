@@ -22,3 +22,4 @@ app.use('/especies', require('./src/agregar_especies/controller.routes'));
 app.use('/arboles', require('./src/formulario_arbol/controller.routes'));
 app.use('/plagas', require('./src/plagas/controller.routes'));
 app.use('/subespecies', require('./src/subespecies/controller.routes'));
+app.use('/mantenimiento', require('./src/formulario_mantenimiento/controller.routes'));

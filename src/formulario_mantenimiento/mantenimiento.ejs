@@ -1,107 +1,114 @@
-<!DOCTYPE html>
-<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registro de Mantenimiento de Árboles</title>
-    <link rel="stylesheet" href="/css/output_mantenimiento.css">
+    <title>Formulario de Mantenimiento</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js"></script>
 </head>
-<body class="bg-gray-50">
-    <div class="container mx-auto px-4 py-8">
-        <h1 class="text-3xl font-bold text-green-800 mb-6 text-center">🌳 Registro de Mantenimiento de Árboles 🌳</h1>
-        
-        <form class="bg-white shadow-md rounded-lg p-6 max-w-3xl mx-auto" action="/mantenimiento" method="POST" enctype="multipart/form-data">
-            <fieldset class="space-y-6">
-                <legend class="text-xl font-semibold text-green-700 border-b border-green-200 pb-2 mb-4">📝 Detalles de la Intervención</legend>
-                
-                <!-- Fecha de Intervención -->
-                <div class="form-group">
-                    <label for="fecha" class="block text-sm font-medium text-gray-700">Fecha de Intervención</label>
-                    <input type="date" id="fecha" name="fecha" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500">
-                </div>
-                
-                <!-- Tipo de Intervención -->
-                <div class="form-group">
-                    <label for="tipo_intervencion" class="block text-sm font-medium text-gray-700">Tipo de Intervención</label>
-                    <select id="tipo_intervencion" name="tipo_intervencion" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500">
-                        <option value="">Seleccione un tipo...</option>
-                        <option value="poda">Poda</option>
-                        <option value="derribo">Derribo</option>
-                        <option value="trasplante">Trasplante</option>
-                        <option value="restitucion">Restitución</option>
-                    </select>
-                </div>
-                
-                <!-- Contenedor dinámico para sub-opciones -->
-                <div id="subopciones-container" class="space-y-4">
-                    <!-- Poda -->
-                    <div id="poda-options" class="hidden sub-options space-y-4">
-                        <div>
-                            <label for="tipo_poda" class="block text-sm font-medium text-gray-700">Tipo de Poda</label>
-                            <select id="tipo_poda" name="tipo_poda" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500">
-                                <option value="">Seleccione...</option>
-                                <option value="formacion">Formación</option>
-                                <option value="limpieza">Limpieza de Copa</option>
-                                <option value="restauracion">Restauración de Copa</option>
-                                <option value="aclareo">Aclareo de Copa</option>
-                                <option value="elevacion">Elevación de Copa</option>
-                                <option value="reduccion">Reducción de Copa</option>
-                                <option value="cableado">Poda bajo cableado eléctrico aéreo</option>
-                                <option value="raices">Poda de Raíces</option>
+
+<body class="bg-gray-100 min-h-screen flex flex-col justify-between">
+    <!-- Barra de navegación -->
+    <nav class="bg-white shadow-md">
+        <div class="container mx-auto px-4 py-4 flex items-center justify-between">
+            <div class="text-2xl font-bold text-green-700" id="logo">🎄 Arbol App 🎄</div>
+            <ul class="flex space-x-6 text-gray-600 font-medium">
+                <li><a href="/" class="hover:text-green-600">Inicio</a></li>
+                <li><a href="/especies/nueva_especie" class="hover:text-green-600">Agregar Árbol</a></li>
+                <li><a href="/arboles/lista_arboles" class="hover:text-green-600">Lista de Árboles</a></li>
+                <li><a href="/plagas/formulario_plagas" class="hover:text-green-600">Formulario Plagas</a></li>
+                <li><a href="/mantenimiento/formulario" class="hover:text-green-600">Formulario Mantenimiento</a></li>
+                <li><a href="/mantenimiento/lista" class="hover:text-green-600">Lista Mantenimiento</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Contenedor del formulario -->
+    <main class="flex-grow container mx-auto px-4 py-10">
+        <div class="bg-white p-8 rounded-xl shadow-lg">
+            <h1 id="titulo" class="text-3xl font-bold mb-4 text-center text-green-700">🌳 Formulario de Mantenimiento 🌳
+            </h1>
+            <p id="subtitulo" class="text-gray-600 mb-8 text-center">Aquí podrás registrar una intervención de
+                mantenimiento.</p>
+
+            <form class="bg-white shadow-md rounded-lg p-6 max-w-3xl mx-auto" method="POST"
+                action="/mantenimiento/registrar_mantenimiento" enctype="multipart/form-data">
+                <fieldset class="space-y-6">
+                    <legend class="text-xl font-semibold text-green-700 border-b border-green-200 pb-2 mb-4">📝 Detalles
+                        de
+                        la Intervención</legend>
+
+                    <!-- Fecha de Intervención -->
+                    <div class="form-group">
+                        <label for="fecha" class="block text-sm font-medium text-gray-700">Fecha de Intervención</label>
+                        <input type="date" id="fecha" name="fecha" required
+                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500">
+                    </div>
+
+                    <!-- Tipo de Intervención -->
+                    <div class="form-group">
+                        <label for="tipo_intervencion" class="block text-sm font-medium text-gray-700">Tipo de
+                            Intervención</label>
+                        <select id="tipo_intervencion" name="tipo_intervencion" required
+                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500">
+                            <option value="">Seleccione un tipo...</option>
+                            <option value="poda">Poda</option>
+                            <option value="derribo">Derribo</option>
+                            <option value="trasplante">Trasplante</option>
+                            <option value="restitucion">Restitución</option>
+                        </select>
+                    </div>
+
+                    <!-- Contenedor dinámico para sub-opciones -->
+                    <div id="subopciones-container" class="space-y-6">
+                        <!-- Tipo -->
+                        <div id="tipo-group" class="hidden">
+                            <label for="tipo_intervencion_detalle"
+                                class="block text-sm font-medium text-gray-700">Tipo</label>
+                            <select id="tipo_intervencion_detalle" name="tipo_intervencion_detalle"
+                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500">
+                                <!-- Opciones se insertan dinámicamente -->
                             </select>
                         </div>
-                        <div>
-                            <label for="causa_poda" class="block text-sm font-medium text-gray-700">Causa de la Poda</label>
-                            <select id="causa_poda" name="causa_poda" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500">
-                                <option value="">Seleccione...</option>
-                                <option value="riesgo">Riesgo</option>
-                                <option value="fitosanitario">Estado Fitosanitario</option>
-                                <option value="estructura">Restauración de la Estructura</option>
-                                <option value="infraestructura">Afectación Severa de la Infraestructura</option>
-                                <option value="mantenimiento">Mantenimiento</option>
+
+                        <!-- Causa -->
+                        <div id="causa-group" class="hidden">
+                            <label for="causa_intervencion"
+                                class="block text-sm font-medium text-gray-700">Causa</label>
+                            <select id="causa_intervencion" name="causa_intervencion"
+                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500">
+                                <!-- Opciones se insertan dinámicamente -->
                             </select>
                         </div>
                     </div>
-                    
-                    <!-- Derribo -->
-                    <div id="derribo-options" class="hidden sub-options space-y-4">
-                        <div>
-                            <label for="causa_derribo" class="block text-sm font-medium text-gray-700">Causa del Derribo</label>
-                            <select id="causa_derribo" name="causa_derribo" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500">
-                                <option value="">Seleccione...</option>
-                                <option value="riesgo">Riesgo</option>
-                                <option value="mejoramiento">Mejoramiento y Mantenimiento de Área Verde</option>
-                                <option value="afectacion">Afectación Severa al Patrimonio/Mobiliario/Inmuebles</option>
-                                <option value="obra">Obra Pública y Privada</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label for="tipo_derribo" class="block text-sm font-medium text-gray-700">Tipo de Derribo</label>
-                            <select id="tipo_derribo" name="tipo_derribo" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500">
-                                <option value="">Seleccione...</option>
-                                <option value="controlado">Controlado</option>
-                                <option value="direccional">Direccional</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label for="destino_material" class="block text-sm font-medium text-gray-700">Destino del Material</label>
-                            <input type="text" id="destino_material" name="destino_material" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500">
-                        </div>
+
+
+                    <!-- Campos adicionales para DERRIBO -->
+                    <div id="campo-destino" class="hidden">
+                        <label for="destino_material" class="block text-sm font-medium text-gray-700">Destino del
+                            Material</label>
+                        <input type="text" id="destino_material" name="destino_material"
+                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500">
                     </div>
-                    
-                    <!-- Trasplante -->
-                    <div id="trasplante-options" class="hidden sub-options space-y-4">
+
+                    <!-- Campos adicionales para TRASPLANTE -->
+                    <div id="campos-trasplante" class="hidden space-y-4">
                         <div>
-                            <label for="ubicacion_original" class="block text-sm font-medium text-gray-700">Ubicación Original (ID del árbol o descripción)</label>
-                            <input type="text" id="ubicacion_original" name="ubicacion_original" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500">
+                            <label for="ubicacion_original" class="block text-sm font-medium text-gray-700">Ubicación
+                                Original</label>
+                            <input type="text" id="ubicacion_original" name="ubicacion_original"
+                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500">
                         </div>
                         <div>
-                            <label for="nueva_ubicacion" class="block text-sm font-medium text-gray-700">Nueva Ubicación</label>
-                            <textarea id="nueva_ubicacion" name="nueva_ubicacion" rows="2" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500"></textarea>
+                            <label for="nueva_ubicacion" class="block text-sm font-medium text-gray-700">Nueva
+                                Ubicación</label>
+                            <textarea id="nueva_ubicacion" name="nueva_ubicacion" rows="2"
+                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500"></textarea>
                         </div>
                         <div>
-                            <label for="exito_trasplante" class="block text-sm font-medium text-gray-700">Éxito del Trasplante</label>
-                            <select id="exito_trasplante" name="exito_trasplante" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500">
+                            <label for="exito_trasplante" class="block text-sm font-medium text-gray-700">Éxito del
+                                Trasplante</label>
+                            <select id="exito_trasplante" name="exito_trasplante"
+                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500">
                                 <option value="">Seleccione...</option>
                                 <option value="exitoso">Exitoso</option>
                                 <option value="seguimiento">En Seguimiento</option>
@@ -109,80 +116,179 @@
                             </select>
                         </div>
                     </div>
-                    
-                    <!-- Restitución -->
-                    <div id="restitucion-options" class="hidden sub-options space-y-4">
-                        <div>
-                            <label for="tipo_restitucion" class="block text-sm font-medium text-gray-700">Tipo de Restitución</label>
-                            <select id="tipo_restitucion" name="tipo_restitucion" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500">
-                                <option value="">Seleccione...</option>
-                                <option value="fisica">Física</option>
-                                <option value="economica">Económica</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label for="detalles_restitucion" class="block text-sm font-medium text-gray-700">Detalles de la Restitución</label>
-                            <textarea id="detalles_restitucion" name="detalles_restitucion" rows="3" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500"></textarea>
+
+
+                    <!-- Descripción y Responsable -->
+                    <div class="form-group">
+                        <label for="descripcion" class="block text-sm font-medium text-gray-700">Descripción de la
+                            Intervención</label>
+                        <textarea id="descripcion" name="descripcion" rows="4" required
+                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="responsable" class="block text-sm font-medium text-gray-700">Responsable de la
+                            Intervención</label>
+                        <input type="text" id="responsable" name="responsable" required
+                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500">
+                    </div>
+
+                    <!-- Observaciones -->
+                    <div class="form-group">
+                        <label for="observaciones" class="block text-sm font-medium text-gray-700">Observaciones</label>
+                        <textarea id="observaciones" name="observaciones" rows="3"
+                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500"></textarea>
+                    </div>
+
+                    <!-- Fotografías -->
+                    <div class="form-group">
+                        <label class="block text-sm font-medium text-gray-700">Fotografías de la Intervención</label>
+                        <div class="mt-1 grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label for="foto_antes" class="block text-xs text-gray-500 mb-1">Foto Antes</label>
+                                <input type="file" id="foto_antes" name="foto_antes" accept="image/*"
+                                    class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-green-50 file:text-green-700 hover:file:bg-green-100">
+                            </div>
+                            <div>
+                                <label for="foto_despues" class="block text-xs text-gray-500 mb-1">Foto Después</label>
+                                <input type="file" id="foto_despues" name="foto_despues" accept="image/*"
+                                    class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-green-50 file:text-green-700 hover:file:bg-green-100">
+                            </div>
                         </div>
                     </div>
-                </div>
-                Registrar Intervención
-                <!-- Descripción y Responsable -->
-                <div class="form-group">
-                    <label for="descripcion" class="block text-sm font-medium text-gray-700">Descripción de la Intervención</label>
-                    <textarea id="descripcion" name="descripcion" rows="4" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500"></textarea>
-                </div>
-                
-                <div class="form-group">
-                    <label for="responsable" class="block text-sm font-medium text-gray-700">Responsable de la Intervención</label>
-                    <input type="text" id="responsable" name="responsable" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500">
-                </div>
-                
-                <!-- Observaciones -->
-                <div class="form-group">
-                    <label for="observaciones" class="block text-sm font-medium text-gray-700">Observaciones</label>
-                    <textarea id="observaciones" name="observaciones" rows="3" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500"></textarea>
-                </div>
-                
-                <!-- Fotografías -->
-                <div class="form-group">
-                    <label class="block text-sm font-medium text-gray-700">Fotografías de la Intervención</label>
-                    <div class="mt-1 grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
-                            <label for="foto_antes" class="block text-xs text-gray-500 mb-1">Foto Antes</label>
-                            <input type="file" id="foto_antes" name="foto_antes" accept="image/*" class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-green-50 file:text-green-700 hover:file:bg-green-100">
-                        </div>
-                        <div>
-                            <label for="foto_despues" class="block text-xs text-gray-500 mb-1">Foto Después</label>
-                            <input type="file" id="foto_despues" name="foto_despues" accept="image/*" class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-green-50 file:text-green-700 hover:file:bg-green-100">
-                        </div>
+
+                    <!-- Botón de envío -->
+                    <div class="pt-4">
+                        <button type="submit"
+                            class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition duration-150 ease-in-out">
+                            Registrar Intervención
+                        </button>
                     </div>
-                </div>
-                
-                <!-- Botón de envío -->
-                <div class="pt-4">
-                    <button type="submit" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition duration-150 ease-in-out">
-                        Registrar Intervención
-                    </button>
-                </div>
-            </fieldset>
-        </form>
-    </div>
+                </fieldset>
+            </form>
+
+        </div>
+    </main>
+
+    <!-- Pie de página -->
+    <footer class="bg-white shadow-inner py-4 mt-8">
+        <div class="container mx-auto px-4 text-center">
+            <p class="text-gray-700 mb-2">Consulta el siguiente PDF:</p>
+            <a href="https://bioteca.biodiversidad.gob.mx/janium/Documentos/1480.pdf" target="_blank"
+                class="text-green-600 hover:underline font-semibold">
+                Flora del Valle de México
+            </a>
+        </div>
+    </footer>
+
 
     <script>
-        // Mostrar/ocultar sub-opciones según el tipo de intervención seleccionado
-        document.getElementById('tipo_intervencion').addEventListener('change', function() {
-            // Ocultar todas las sub-opciones primero
-            document.querySelectorAll('.sub-options').forEach(el => {
-                el.classList.add('hidden');
+        document.addEventListener('DOMContentLoaded', function () {
+            const tipoIntervencion = document.getElementById('tipo_intervencion');
+            const tipoGroup = document.getElementById('tipo-group');
+            const causaGroup = document.getElementById('causa-group');
+            const tipoDetalle = document.getElementById('tipo_intervencion_detalle');
+            const causaDetalle = document.getElementById('causa_intervencion');
+
+            const campoDestino = document.getElementById('campo-destino');
+            const camposTrasplante = document.getElementById('campos-trasplante');
+
+            const opciones = {
+                poda: {
+                    tipo: [
+                        "LIMPIEZA DE COPA",
+                        "RESTAURACIÓN DE COPA",
+                        "ACLAREO DE COPA",
+                        "ELEVACIÓN DE COPA",
+                        "REDUCCIÓN DE COPA",
+                        "PODA BAJO CABLEADO ELÉCTRICO AÉREO",
+                        "PODA DE RAÍCES"
+                    ],
+                    causa: [
+                        "RIESGO",
+                        "ESTADO FITOSANITARIO",
+                        "RESTAURACIÓN DE LA ESTRUCTURA",
+                        "AFECTACIÓN SEVERA DE LA INFRAESTRUCTURA, EQUIPAMIENTO Y SERVICIOS URBANOS",
+                        "MANTENIMIENTO"
+                    ]
+                },
+                derribo: {
+                    tipo: ["Controlado", "Direccional"],
+                    causa: [
+                        "DERRIBO DE ÁRBOLES DE RIESGO",
+                        "DERRIBO DE ÁRBOLES POR MEJORAMIENTO Y MANTENIMIENTO DE UN ÁREA VERDE",
+                        "DERRIBO DE ÁRBOLES POR AFECTACIÓN SEVERA AL PATRIMONIO URBANÍSTICO O ARQUITECTÓNICO, MOBILIARIO Y EQUIPAMIENTO URBANO E INMUEBLES",
+                        "DERRIBO DE ÁRBOLES POR OBRA PÚBLICA Y PRIVADA",
+                        "ÁRBOLES CONSIDERADOS COMO MONUMENTOS URBANÍSTICOS"
+                    ]
+                },
+                trasplante: {
+                    tipo: ["Banqueo", "Extracción, traslado y plantación"],
+                    causa: [
+                        "Reubicación para Aprovechamiento",
+                        "Evitar Afectaciones, Mejoramiento del Espacio Urbano"
+                    ]
+                },
+                restitucion: {
+                    tipo: ["Restitución Física", "Restitución Económica"],
+                    causa: [
+                        "Obra Pública o Privada",
+                        "Riesgo para la Población o Infraestructura",
+                        "Mejoramiento y Mantenimiento de Áreas Verdes",
+                        "Afectación Severa al Patrimonio Urbanístico, Arquitectónico, Mobiliario y Equipamiento Urbano e Inmuebles"
+                    ]
+                }
+            };
+
+            tipoIntervencion.addEventListener('change', function () {
+                const seleccion = this.value;
+
+                // Limpiar selects
+                tipoDetalle.innerHTML = '';
+                causaDetalle.innerHTML = '';
+
+                // Ocultar todo por defecto
+                tipoGroup.classList.add('hidden');
+                causaGroup.classList.add('hidden');
+                campoDestino.classList.add('hidden');
+                camposTrasplante.classList.add('hidden');
+
+                if (opciones[seleccion]) {
+                    tipoGroup.classList.remove('hidden');
+                    causaGroup.classList.remove('hidden');
+
+                    opciones[seleccion].tipo.forEach(op => {
+                        const option = document.createElement('option');
+                        option.value = op;
+                        option.textContent = op;
+                        tipoDetalle.appendChild(option);
+                    });
+
+                    opciones[seleccion].causa.forEach(op => {
+                        const option = document.createElement('option');
+                        option.value = op;
+                        option.textContent = op;
+                        causaDetalle.appendChild(option);
+                    });
+
+                    if (seleccion === 'derribo') {
+                        campoDestino.classList.remove('hidden');
+                    }
+
+                    if (seleccion === 'trasplante') {
+                        camposTrasplante.classList.remove('hidden');
+                    }
+                }
             });
-            
-            // Mostrar solo las sub-opciones relevantes
-            const selectedOption = this.value;
-            if (selectedOption) {
-                document.getElementById(`${selectedOption}-options`).classList.remove('hidden');
-            }
         });
     </script>
+
+    <!-- Animaciones -->
+    <script>
+        anime({ targets: "#logo", translateY: [-50, 0], opacity: [0, 1], duration: 1200, easing: "easeOutElastic(1, .8)" });
+        anime({ targets: "#titulo", scale: [0.7, 1], opacity: [0, 1], delay: 300, duration: 1000, easing: "easeOutExpo" });
+        anime({ targets: "#subtitulo", translateX: [-30, 0], opacity: [0, 1], delay: 600, duration: 800, easing: "easeOutQuad" });
+    </script>
 </body>
+
 </html>

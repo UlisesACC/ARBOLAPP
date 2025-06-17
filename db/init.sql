@@ -185,10 +185,26 @@ CREATE TABLE ArbolesPlagas (
 CREATE TABLE Mantenimientos (
     id_mantenimiento SERIAL PRIMARY KEY,
     id_arbol INT REFERENCES Arboles(id_arbol) ON DELETE CASCADE,
-    tipo VARCHAR(50) CHECK (tipo IN ('Riego', 'Poda', 'Corte de raíz', 'Tratamiento de plagas', 'Otro')) NOT NULL,
+    tipo_intervencion VARCHAR(50), -- Ej: poda, derribo, etc.
+    tipo_detalle VARCHAR(100),     -- Ej: LIMPIEZA DE COPA, Banqueo, etc.
+    causa_detalle VARCHAR(150),    -- Ej: RIESGO, Reubicación para Aprovechamiento, etc.
     fecha DATE DEFAULT CURRENT_DATE,
-    id_brigada INT REFERENCES Brigadas(id_brigada) ON DELETE SET NULL,
-    observaciones TEXT
+    descripcion TEXT,
+    responsable TEXT,
+    observaciones TEXT,
+
+    -- Campos condicionales según tipo de intervención
+    destino_material TEXT,          -- solo si tipo_intervencion = 'derribo'
+    ubicacion_original TEXT,        -- solo si tipo_intervencion = 'trasplante'
+    nueva_ubicacion TEXT,           -- solo si tipo_intervencion = 'trasplante'
+    exito_trasplante VARCHAR(20),   -- solo si tipo_intervencion = 'trasplante'
+
+    -- Fotografías
+    foto_antes TEXT,
+    foto_despues TEXT,
+
+    -- Metadatos
+    fecha_registro TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 -- Reforestaciones 🌱
 CREATE TABLE Reforestaciones (
