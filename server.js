@@ -10,14 +10,14 @@ const upload = multer({ dest: 'uploads/' });
 
 // configuraciones Express
 app.set('view engine', 'ejs');
-app.set('views', path.join(dirname, 'src'));
+app.set('views', path.join(__dirname, 'src'));
 
-// Servir archivos estáticos desde la carpeta 'uploads'
-app.use('/uploads', express.static(path.join(dirname, 'uploads')));
+// Servir archivos estÃ¡ticos desde la carpeta 'uploads'
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // iniciando el servidor
 app.listen(port, () => {
-  console.log(Servidor corriendo en http://localhost:${port});
+  console.log(`Servidor corriendo en http://localhost:${port}`);
 });
 //haciendo uso de los controllers
 app.use('/', require('./src/inicio/controller.routes'));
