@@ -15,3 +15,26 @@ docker compose down --volumes --remove-orphans
 docker system prune -af
 docker compose up --build
 ```
+## Para subir cambios
+Se configuro para github y gitlab
+si se quiere subir a ambos repos se creo un alias
+```bash
+git config alias.pushall '!git push origin HEAD && git push gitlab HEAD'
+```
+y solo ejecutar 
+```bash
+git pushall
+```
+Para ver si esta en repo remoto poner
+```bash
+git remote -v
+```
+Para agregar un repo de gitlab es poner
+```bash
+git remote add gitlab https://gitlab.com/first_proyect4/arbolapp.git
+```
+Para subir los cambios es con
+```bash
+git push origin abdiel
+git push gitlab abdiel
+```

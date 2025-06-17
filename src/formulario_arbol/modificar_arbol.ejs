@@ -16,8 +16,8 @@
       <div id="logo" class="text-2xl font-bold text-green-700">🎄 Arbol App 🎄</div>
       <ul class="flex space-x-6 text-gray-600 font-medium">
         <li><a href="/" class="hover:text-green-600">Inicio</a></li>
-        <li><a href="/formulario" class="hover:text-green-600">Registrar Árbol</a></li>
-        <li><a href="/lista_arboles" class="hover:text-green-600">Lista de Árboles</a></li>
+        <li><a href="/arboles/formulario" class="hover:text-green-600">Registrar Árbol</a></li>
+        <li><a href="/arboles/lista_arboles" class="hover:text-green-600">Lista de Árboles</a></li>
       </ul>
     </div>
   </nav>
@@ -27,7 +27,7 @@
     <div class="bg-white p-8 rounded-xl shadow-lg">
       <h1 id="titulo" class="text-3xl font-bold mb-4 text-center text-green-700">🌳 Modificar Árbol 🌳</h1>
 
-      <form method="POST" action="/modificar_arbol/<%= arbol.id_arbol %>" enctype="multipart/form-data" class="space-y-6">
+      <form method="POST" action="/arboles/modificar_arbol/<%= arbol.id_arbol %>" enctype="multipart/form-data" class="space-y-6">
 
         <!-- Especie -->
         <div>
