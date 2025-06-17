@@ -165,10 +165,12 @@
                     </div>
 
                     <!-- Fotografía -->
+                    <!-- Fotografías múltiples con vista previa -->
                     <div class="mb-4">
-                        <label class="block text-gray-700 mb-2">Fotografía del árbol:</label>
-                        <input type="file" name="fotografia"
-                            class="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-green-400" />
+                        <label class="block text-gray-700 mb-2">Fotografías del árbol:</label>
+                        <input type="file" id="fotosInput" name="fotografias" multiple accept="image/*"
+                            class="w-full border-2 border-dashed border-green-400 bg-green-50 p-4 rounded-lg shadow-inner transition hover:border-green-600 hover:bg-green-100" />
+                        <div id="previewContainer" class="mt-4 flex flex-wrap gap-4"></div>
                     </div>
 
                     <!-- Botón enviar -->
@@ -232,6 +234,57 @@
             duration: 900,
             easing: "easeOutCubic"
         });
+
+        // Previsualización de fotos con opción de eliminar
+        const fotosInput = document.getElementById('fotosInput');
+        const previewContainer = document.getElementById('previewContainer');
+        let archivosSeleccionados = [];
+
+        fotosInput.addEventListener('change', () => {
+            const nuevosArchivos = Array.from(fotosInput.files);
+
+            nuevosArchivos.forEach((file) => {
+                archivosSeleccionados.push(file);
+
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    const div = document.createElement('div');
+                    div.className = 'relative w-32 h-32';
+
+                    const img = document.createElement('img');
+                    img.src = e.target.result;
+                    img.className = 'w-full h-full object-cover rounded shadow';
+
+                    const botonEliminar = document.createElement('button');
+                    botonEliminar.textContent = '✖';
+                    botonEliminar.className = 'absolute -top-2 -right-2 bg-red-600 text-white rounded-full w-6 h-6 text-xs flex items-center justify-center';
+                    botonEliminar.onclick = () => {
+                        const index = archivosSeleccionados.indexOf(file);
+                        if (index > -1) {
+                            archivosSeleccionados.splice(index, 1);
+                            actualizarInputArchivos();
+                            previewContainer.removeChild(div);
+                        }
+                    };
+
+                    div.appendChild(img);
+                    div.appendChild(botonEliminar);
+                    previewContainer.appendChild(div);
+                };
+
+                reader.readAsDataURL(file);
+            });
+
+            actualizarInputArchivos();
+        });
+
+
+        function actualizarInputArchivos() {
+            const dataTransfer = new DataTransfer();
+            archivosSeleccionados.forEach(file => dataTransfer.items.add(file));
+            fotosInput.files = dataTransfer.files;
+        }
+
 
         async function cargarSubespecies() {
             const especie_id = document.getElementById("especie").value;

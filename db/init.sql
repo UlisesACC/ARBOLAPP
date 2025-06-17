@@ -140,9 +140,9 @@ CREATE TABLE Arboles (
     altura DECIMAL(5,2),
     grosor_copa DECIMAL(5,2),
     ultima_inspeccion DATE DEFAULT CURRENT_DATE,
-    fotografia TEXT,
     observaciones TEXT
 );
+
 
 -- Niveles de Muérdago
 CREATE TABLE NivelesMuérdago (
@@ -250,4 +250,12 @@ CREATE TABLE Auditoria (
     operacion VARCHAR(50),
     fecha TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     detalle TEXT
+);
+-- Fotografias del arbol
+CREATE TABLE fotos_arbol (
+    id_foto SERIAL PRIMARY KEY,
+    id_arbol INT REFERENCES Arboles(id_arbol) ON DELETE CASCADE,
+    imagen BYTEA NOT NULL,
+    descripcion TEXT,
+    fecha_subida TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,6 +8,7 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js"></script>
 </head>
+
 <body class="bg-gray-100 min-h-screen flex flex-col justify-between">
 
   <!-- Barra de navegación -->
@@ -33,56 +35,85 @@
             <th class="py-3 px-6 text-left">Subespecie</th>
             <th class="py-3 px-6 text-left">Alcaldía</th>
             <th class="py-3 px-6 text-left">Colonia</th>
-            <th class="py-3 px-6 text-left">Grosor Tronco (cm)</th>
             <th class="py-3 px-6 text-left">Altura (m)</th>
-            <th class="py-3 px-6 text-left">Grosor Copa (m)</th>
             <th class="py-3 px-6 text-left">Observaciones</th>
+            <th class="py-3 px-6 text-left">Fotos</th>
             <th class="py-3 px-6 text-center">Acciones</th>
           </tr>
         </thead>
         <tbody class="text-gray-700">
-          <% arboles.forEach((arbol, index) => { %>
+          <% arboles.forEach((arbol)=> { %>
             <tr class="border-b fila-arbol" style="opacity:0;">
-              <td class="py-4 px-6"><%= arbol.id_arbol %></td>
-              <td class="py-4 px-6"><%= arbol.nombre_especie || '-' %></td>
-              <td class="py-4 px-6"><%= arbol.nombre_subespecie || '-' %></td>
-              <td class="py-4 px-6"><%= arbol.alcaldia || '-' %></td>
-              <td class="py-4 px-6"><%= arbol.colonia || '-' %></td>
-              <td class="py-4 px-6"><%= arbol.grosor_tronco || '-' %></td>
-              <td class="py-4 px-6"><%= arbol.altura || '-' %></td>
-              <td class="py-4 px-6"><%= arbol.grosor_copa || '-' %></td>
-              <td class="py-4 px-6"><%= arbol.observaciones || '-' %></td>
+              <td class="py-4 px-6">
+                <%= arbol.id_arbol %>
+              </td>
+              <td class="py-4 px-6">
+                <%= arbol.nombre_especie || '-' %>
+              </td>
+              <td class="py-4 px-6">
+                <%= arbol.nombre_subespecie || '-' %>
+              </td>
+              <td class="py-4 px-6">
+                <%= arbol.alcaldia || '-' %>
+              </td>
+              <td class="py-4 px-6">
+                <%= arbol.colonia || '-' %>
+              </td>
+              <td class="py-4 px-6">
+                <%= arbol.altura || '-' %>
+              </td>
+              <td class="py-4 px-6">
+                <%= arbol.observaciones || '-' %>
+              </td>
+              <td class="py-4 px-6">
+                <% if (arbol.fotos_base64 && arbol.fotos_base64.length> 0) { %>
+                  <img src="data:image/jpeg;base64,<%= arbol.fotos_base64[0] %>"
+                    class="w-20 h-20 object-cover rounded cursor-pointer hover:scale-105 transition" alt="foto"
+                    onclick='abrirCarrusel(<%- JSON.stringify(arbol.fotos_base64) %>)'>
+                  <% } else { %>
+                    <span class="text-gray-400 italic">Sin fotos</span>
+                    <% } %>
+              </td>
               <td class="py-4 px-6 text-center flex gap-2 justify-center">
                 <form method="POST" action="/arboles/eliminar_arbol/<%= arbol.id_arbol %>">
-                  <button type="submit" class="boton-eliminar bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-full">
+                  <button type="submit" class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-full">
                     Eliminar
                   </button>
                 </form>
-                <a href="/arboles/modificar_arbol/<%= arbol.id_arbol %>" class="boton-editar bg-yellow-400 hover:bg-yellow-500 text-white font-bold py-2 px-4 rounded-full">
+                <a href="/arboles/modificar_arbol/<%= arbol.id_arbol %>"
+                  class="bg-yellow-400 hover:bg-yellow-500 text-white font-bold py-2 px-4 rounded-full">
                   Editar
                 </a>
               </td>
             </tr>
-          <% }) %>
+            <% }); %>
         </tbody>
       </table>
     </div>
   </main>
 
+  <!-- Modal de carrusel -->
+  <div id="modalImagen" class="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center hidden z-50">
+    <div id="contenedorModal" class="relative max-w-3xl w-full px-4 perspective-3d">
+      <button onclick="cerrarModal()"
+        class="absolute top-2 right-2 bg-red-500 text-white rounded-full px-3 py-1 text-xl font-bold hover:bg-red-600">✕</button>
+      <img id="imagenGrande" src=""
+        class="max-h-[80vh] mx-auto rounded-lg shadow-lg border-4 border-white transform transition-transform duration-500" />
+    </div>
+  </div>
+
   <!-- Footer -->
   <footer class="bg-white shadow-inner py-4 mt-8">
     <div class="container mx-auto px-4 text-center text-gray-600">
-      <p>Consulta también: 
-        <a href="https://bioteca.biodiversidad.gob.mx/janium/Documentos/1480.pdf" target="_blank" class="text-green-600 hover:underline font-semibold">
-          Flora del Valle de México
-        </a>
+      <p>Consulta también:
+        <a href="https://bioteca.biodiversidad.gob.mx/janium/Documentos/1480.pdf" target="_blank"
+          class="text-green-600 hover:underline font-semibold">Flora del Valle de México</a>
       </p>
     </div>
   </footer>
 
-  <!-- Animaciones Anime.js -->
+  <!-- Scripts -->
   <script>
-    // Animar el logo
     anime({
       targets: "#logo",
       translateY: [-30, 0],
@@ -91,7 +122,6 @@
       easing: "easeOutElastic(1, .8)"
     });
 
-    // Animar el título
     anime({
       targets: "#titulo",
       scale: [0.7, 1],
@@ -101,36 +131,99 @@
       easing: "easeOutExpo"
     });
 
-    // Animar filas de la tabla una por una
     anime({
       targets: ".fila-arbol",
       opacity: [0, 1],
       translateY: [30, 0],
-      delay: anime.stagger(100, { start: 800 }), // Cada fila se anima en cascada
+      delay: anime.stagger(100, { start: 800 }),
       duration: 800,
       easing: "easeOutCubic"
     });
 
-    // Animar botones eliminar y editar al pasar el mouse
-    document.querySelectorAll('.boton-eliminar, .boton-editar').forEach(boton => {
-      boton.addEventListener('mouseenter', () => {
-        anime({
-          targets: boton,
-          scale: [1, 1.1],
-          duration: 300,
-          easing: "easeOutQuad"
-        });
-      });
-      boton.addEventListener('mouseleave', () => {
-        anime({
-          targets: boton,
-          scale: [1.1, 1],
-          duration: 300,
-          easing: "easeOutQuad"
-        });
-      });
-    });
-  </script>
+    let fotos = [];
+    let indice = 0;
+    let intervalo = null;
 
+    function abrirCarrusel(listaBase64) {
+      fotos = listaBase64;
+      indice = 0;
+
+      const modal = document.getElementById("modalImagen");
+      const imagen = document.getElementById("imagenGrande");
+      const contenedor = document.getElementById("contenedorModal");
+
+      imagen.src = `data:image/jpeg;base64,${fotos[indice]}`;
+      modal.classList.remove("hidden");
+
+      modal.style.opacity = 0;
+      contenedor.style.opacity = 0;
+      contenedor.style.transform = "scale3d(0.8, 0.8, 0.8) rotateY(45deg)";
+
+      anime({
+        targets: modal,
+        opacity: [0, 1],
+        duration: 300,
+        easing: "easeOutCubic"
+      });
+
+      anime({
+        targets: contenedor,
+        opacity: [0, 1],
+        scale: [0.8, 1],
+        rotateY: ['45deg', '0deg'],
+        duration: 800,
+        easing: "easeOutExpo"
+      });
+
+      intervalo = setInterval(() => {
+        indice = (indice + 1) % fotos.length;
+        anime({
+          targets: "#imagenGrande",
+          opacity: [1, 0],
+          scale: [1, 0.8],
+          rotateY: ['0deg', '90deg'],
+          duration: 400,
+          easing: "easeInCubic",
+          complete: () => {
+            imagen.src = `data:image/jpeg;base64,${fotos[indice]}`;
+            anime({
+              targets: "#imagenGrande",
+              opacity: [0, 1],
+              scale: [0.8, 1],
+              rotateY: ['-90deg', '0deg'],
+              duration: 400,
+              easing: "easeOutCubic"
+            });
+          }
+        });
+      }, 5000);
+    }
+
+    function cerrarModal() {
+      clearInterval(intervalo);
+      const modal = document.getElementById("modalImagen");
+      const imagen = document.getElementById("imagenGrande");
+      imagen.src = "";
+      modal.classList.add("hidden");
+    }
+    // Movimiento 3D con el mouse
+    const imagenGrande = document.getElementById("imagenGrande");
+
+    imagenGrande.addEventListener("mousemove", (e) => {
+      const { width, height, left, top } = imagenGrande.getBoundingClientRect();
+      const x = e.clientX - left;
+      const y = e.clientY - top;
+      const rotX = ((y / height) - 0.5) * 10; // sensibilidad vertical
+      const rotY = ((x / width) - 0.5) * 10;  // sensibilidad horizontal
+
+      imagenGrande.style.transform = `rotateX(${-rotX}deg) rotateY(${rotY}deg) scale(1.05)`;
+    });
+
+    imagenGrande.addEventListener("mouseleave", () => {
+      imagenGrande.style.transform = "rotateX(0deg) rotateY(0deg) scale(1)";
+    });
+
+  </script>
 </body>
+
 </html>
