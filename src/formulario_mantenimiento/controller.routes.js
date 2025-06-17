@@ -39,8 +39,9 @@ router.post(
         observaciones
       } = req.body;
 
-      const fotoAntes = req.files['foto_antes'] ? req.files['foto_antes'][0].path : null;
-      const fotoDespues = req.files['foto_despues'] ? req.files['foto_despues'][0].path : null;
+      const fotoAntes = req.files['foto_antes'] ? req.files['foto_antes'][0].filename : null;
+      const fotoDespues = req.files['foto_despues'] ? req.files['foto_despues'][0].filename : null;
+
 
       await db.query(`
         INSERT INTO Mantenimientos (
