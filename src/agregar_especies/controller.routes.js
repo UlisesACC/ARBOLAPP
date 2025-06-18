@@ -3,10 +3,9 @@ const express = require('express');
 const router = express.Router();
 const db = require('../db');
 const multer = require('multer');
-const upload = multer({ dest: 'uploads/' });
-const fs = require('fs');
-const path = require('path');
+const upload = multer({ storage: multer.memoryStorage() });
 
+// Nueva especie - Formulario
 // Nueva especie - Formulario
 router.get('/nueva_especie', async (req, res) => {
   try {
@@ -14,10 +13,26 @@ router.get('/nueva_especie', async (req, res) => {
     const floresResult = await db.query('SELECT * FROM DescripcionesFormaFlor ORDER BY forma_flor');
     const origenesResult = await db.query('SELECT * FROM DescripcionesOrigen ORDER BY origen');
 
+    // Convertir fotografías BYTEA a base64
+    const hojas = hojasResult.rows.map(row => ({
+      ...row,
+      fotografia_base64: row.fotografia ? row.fotografia.toString('base64') : null
+    }));
+
+    const flores = floresResult.rows.map(row => ({
+      ...row,
+      fotografia_base64: row.fotografia ? row.fotografia.toString('base64') : null
+    }));
+
+    const origenes = origenesResult.rows.map(row => ({
+      ...row,
+      fotografia_base64: row.fotografia ? row.fotografia.toString('base64') : null
+    }));
+
     res.render('agregar_especies/new_especies', {
-      hojas: hojasResult.rows,
-      flores: floresResult.rows,
-      origenes: origenesResult.rows
+      hojas,
+      flores,
+      origenes
     });
   } catch (err) {
     console.error('Error cargando opciones:', err);
@@ -75,7 +90,7 @@ router.post('/modificar_especie/:id', upload.single('fotografia'), async (req, r
 
     let query, params;
     if (req.file) {
-      const buffer = fs.readFileSync(req.file.path);
+      const buffer = req.file.buffer;
       query = `
         UPDATE Especies
         SET nombre = $1, descripcion = $2, fotografia = $3
@@ -106,7 +121,7 @@ router.post('/nueva_especie', upload.single('fotografia'), async (req, res) => {
 
     let fotografiaBuffer = null;
     if (req.file) {
-      fotografiaBuffer = fs.readFileSync(req.file.path);
+      fotografiaBuffer = req.file.buffer;  // ← aquí el cambio
     }
 
     await db.query(`
@@ -118,6 +133,61 @@ router.post('/nueva_especie', upload.single('fotografia'), async (req, res) => {
   } catch (err) {
     console.error('Error registrando especie:', err);
     res.status(500).send('Error registrando especie');
+  }
+});
+
+
+// Subir fotografía a DescripcionesFormaHoja
+router.post('/subir_hoja', upload.single('fotografia'), async (req, res) => {
+  try {
+    const { forma_hoja, descripcion } = req.body;
+    const fotografia = req.file ? req.file.buffer : null;
+
+    await db.query(`
+      INSERT INTO DescripcionesFormaHoja (forma_hoja, descripcion, fotografia)
+      VALUES ($1, $2, $3)
+    `, [forma_hoja, descripcion, fotografia]);
+
+    res.redirect('/especies/nueva_especie');
+  } catch (err) {
+    console.error('Error registrando forma hoja:', err);
+    res.status(500).send('Error registrando hoja');
+  }
+});
+
+// Subir fotografía a DescripcionesFormaFlor
+router.post('/subir_flor', upload.single('fotografia'), async (req, res) => {
+  try {
+    const { forma_flor, descripcion } = req.body;
+    const fotografia = req.file ? req.file.buffer : null;
+
+    await db.query(`
+      INSERT INTO DescripcionesFormaFlor (forma_flor, descripcion, fotografia)
+      VALUES ($1, $2, $3)
+    `, [forma_flor, descripcion, fotografia]);
+
+    res.redirect('/especies/nueva_especie');
+  } catch (err) {
+    console.error('Error registrando forma flor:', err);
+    res.status(500).send('Error registrando flor');
+  }
+});
+
+// Subir fotografía a DescripcionesOrigen
+router.post('/subir_origen', upload.single('fotografia'), async (req, res) => {
+  try {
+    const { origen, descripcion } = req.body;
+    const fotografia = req.file ? req.file.buffer : null;
+
+    await db.query(`
+      INSERT INTO DescripcionesOrigen (origen, descripcion, fotografia)
+      VALUES ($1, $2, $3)
+    `, [origen, descripcion, fotografia]);
+
+    res.redirect('/especies/nueva_especie');
+  } catch (err) {
+    console.error('Error registrando origen:', err);
+    res.status(500).send('Error registrando origen');
   }
 });
 

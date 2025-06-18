@@ -3,21 +3,21 @@ CREATE TABLE DescripcionesFormaHoja (
     id_forma_hoja SERIAL PRIMARY KEY,
     forma_hoja VARCHAR(50) UNIQUE NOT NULL,
     descripcion TEXT,
-    fotografia TEXT
+    fotografia BYTEA
 );
 
 CREATE TABLE DescripcionesFormaFlor (
     id_forma_flor SERIAL PRIMARY KEY,
     forma_flor VARCHAR(50) UNIQUE NOT NULL,
     descripcion TEXT,
-    fotografia TEXT
+    fotografia BYTEA
 );
 
 CREATE TABLE DescripcionesOrigen (
     id_origen SERIAL PRIMARY KEY,
     origen VARCHAR(50) UNIQUE NOT NULL,
     descripcion TEXT,
-    fotografia TEXT
+    fotografia BYTEA
 );
 
 CREATE TABLE Especies (
