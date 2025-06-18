@@ -26,3 +26,5 @@ app.use('/arboles', require('./src/formulario_arbol/controller.routes'));
 app.use('/plagas', require('./src/plagas/controller.routes'));
 app.use('/subespecies', require('./src/subespecies/controller.routes'));
 app.use('/mantenimiento', require('./src/formulario_mantenimiento/controller.routes'));
+app.use('/mapa_arboles', require('./src/mapa_arboles/controller.routes'));
+app.use('/assets', express.static('assets'));
