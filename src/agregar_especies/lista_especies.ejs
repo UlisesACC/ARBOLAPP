@@ -47,17 +47,23 @@
             </tr>
           </thead>
           <tbody id="tablaEspecies">
-            <% especies.forEach(especie => { %>
+            <% especies.forEach(especie=> { %>
               <tr class="border-b hover:bg-green-50 transition">
-                <td class="py-4 px-6"><%= especie.nombre %></td>
-                <td class="py-4 px-6"><%= especie.descripcion ? especie.descripcion.substring(0, 50) + '...' : '' %></td>
+                <td class="py-4 px-6">
+                  <%= especie.nombre %>
+                </td>
+                <td class="py-4 px-6">
+                  <%= especie.descripcion ? especie.descripcion.substring(0, 50) + '...' : '' %>
+                </td>
                 <td class="py-4 px-6 text-center">
                   <% if (especie.fotografia) { %>
-                    <img src="/uploads/<%= especie.fotografia %>" alt="Foto" class="h-16 mx-auto rounded-lg shadow">
-                  <% } else { %>
-                    Sin foto
-                  <% } %>
+                    <img src="data:image/jpeg;base64,<%= especie.fotografia.toString('base64') %>" alt="Foto"
+                      class="h-16 mx-auto rounded-lg shadow">
+                    <% } else { %>
+                      Sin foto
+                      <% } %>
                 </td>
+
                 <td class="py-4 px-6 flex justify-center gap-2">
                   <form action="/especies/eliminar_especie/<%= especie.id_especie %>" method="POST"
                     onsubmit="return confirmarEliminar(event)">
@@ -72,7 +78,7 @@
                   </a>
                 </td>
               </tr>
-            <% }) %>
+              <% }) %>
           </tbody>
         </table>
       </div>

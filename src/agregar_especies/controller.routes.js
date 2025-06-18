@@ -4,6 +4,8 @@ const router = express.Router();
 const db = require('../db');
 const multer = require('multer');
 const upload = multer({ dest: 'uploads/' });
+const fs = require('fs');
+const path = require('path');
 
 // Nueva especie - Formulario
 router.get('/nueva_especie', async (req, res) => {
@@ -70,26 +72,30 @@ router.post('/modificar_especie/:id', upload.single('fotografia'), async (req, r
   try {
     const { id } = req.params;
     const { nombre, descripcion } = req.body;
-    const fotografia = req.file ? req.file.filename : null;
 
-    if (fotografia) {
-      await db.query(`
+    let query, params;
+    if (req.file) {
+      const buffer = fs.readFileSync(req.file.path);
+      query = `
         UPDATE Especies
         SET nombre = $1, descripcion = $2, fotografia = $3
         WHERE id_especie = $4
-      `, [nombre, descripcion, fotografia, id]);
+      `;
+      params = [nombre, descripcion, buffer, id];
     } else {
-      await db.query(`
+      query = `
         UPDATE Especies
         SET nombre = $1, descripcion = $2
         WHERE id_especie = $3
-      `, [nombre, descripcion, id]);
+      `;
+      params = [nombre, descripcion, id];
     }
 
+    await db.query(query, params);
     res.redirect('/especies/lista_especies');
   } catch (err) {
-    console.error('Error actualizando especie:', err);
-    res.status(500).send('Error actualizando especie');
+    console.error('Error modificando especie:', err);
+    res.status(500).send('Error modificando especie');
   }
 });
 
@@ -97,16 +103,16 @@ router.post('/modificar_especie/:id', upload.single('fotografia'), async (req, r
 router.post('/nueva_especie', upload.single('fotografia'), async (req, res) => {
   try {
     const { nombre, id_forma_hoja, id_forma_flor, id_origen, descripcion } = req.body;
-    const fotografia = req.file ? req.file.filename : null;
 
-    let formaHoja = id_forma_hoja || null;
-    let formaFlor = id_forma_flor || null;
-    let origen = id_origen || null;
+    let fotografiaBuffer = null;
+    if (req.file) {
+      fotografiaBuffer = fs.readFileSync(req.file.path);
+    }
 
     await db.query(`
       INSERT INTO Especies (nombre, id_forma_hoja, id_forma_flor, id_origen, fotografia, descripcion)
       VALUES ($1, $2, $3, $4, $5, $6)
-    `, [nombre, formaHoja, formaFlor, origen, fotografia, descripcion]);
+    `, [nombre, id_forma_hoja || null, id_forma_flor || null, id_origen || null, fotografiaBuffer, descripcion]);
 
     res.redirect('/especies/lista_especies');
   } catch (err) {
