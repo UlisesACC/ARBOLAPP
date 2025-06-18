@@ -7,6 +7,21 @@
   <title>Lista de Árboles</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js"></script>
+
+  <style>
+    .carrusel-imagen {
+      position: absolute;
+      transition: transform 0.6s ease, opacity 0.6s ease;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      max-height: 60vh;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+    }
+
+    .perspective-3d {
+      perspective: 1000px;
+    }
+  </style>
 </head>
 
 <body class="bg-gray-100 min-h-screen flex flex-col justify-between">
@@ -93,14 +108,17 @@
   </main>
 
   <!-- Modal de carrusel -->
+  <!-- Modal de carrusel -->
   <div id="modalImagen" class="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center hidden z-50">
-    <div id="contenedorModal" class="relative max-w-3xl w-full px-4 perspective-3d">
+    <div id="contenedorModal" class="relative max-w-3xl w-full px-4 perspective-3d bg-transparent">
       <button onclick="cerrarModal()"
         class="absolute top-2 right-2 bg-red-500 text-white rounded-full px-3 py-1 text-xl font-bold hover:bg-red-600">✕</button>
-      <img id="imagenGrande" src=""
-        class="max-h-[80vh] mx-auto rounded-lg shadow-lg border-4 border-white transform transition-transform duration-500" />
+      <div id="carrusel3D" class="relative flex items-center justify-center h-[60vh] overflow-hidden">
+        <!-- Las imágenes se insertarán dinámicamente -->
+      </div>
     </div>
   </div>
+
 
   <!-- Footer -->
   <footer class="bg-white shadow-inner py-4 mt-8">
@@ -149,78 +167,93 @@
       indice = 0;
 
       const modal = document.getElementById("modalImagen");
-      const imagen = document.getElementById("imagenGrande");
-      const contenedor = document.getElementById("contenedorModal");
+      const carrusel = document.getElementById("contenedorModal");
+      carrusel.innerHTML = `
+    <button onclick="cerrarModal()"
+      class="absolute top-2 right-2 bg-red-500 text-white rounded-full px-3 py-1 text-xl font-bold hover:bg-red-600">✕</button>
+  `;
 
-      imagen.src = `data:image/jpeg;base64,${fotos[indice]}`;
+      // Agregar imágenes al carrusel
+      fotos.forEach((foto, i) => {
+        const img = document.createElement("img");
+        img.src = `data:image/jpeg;base64,${foto}`;
+        img.className = "carrusel-imagen absolute top-1/2 left-1/2 max-h-[80vh] rounded-lg shadow-lg border-4 border-white transform transition-transform duration-500";
+        img.dataset.index = i;
+        img.style.zIndex = fotos.length - i;
+        img.addEventListener("click", () => mostrarImagen(i));
+        carrusel.appendChild(img);
+      });
+
       modal.classList.remove("hidden");
+      mostrarImagen(indice);
 
-      modal.style.opacity = 0;
-      contenedor.style.opacity = 0;
-      contenedor.style.transform = "scale3d(0.8, 0.8, 0.8) rotateY(45deg)";
+      // Efecto 3D con movimiento del mouse
+      document.querySelectorAll(".carrusel-imagen").forEach(img => {
+        img.addEventListener("mousemove", (e) => {
+          const { width, height, left, top } = img.getBoundingClientRect();
+          const x = e.clientX - left;
+          const y = e.clientY - top;
+          const rotX = ((y / height) - 0.5) * 10;
+          const rotY = ((x / width) - 0.5) * 10;
+          img.style.transform += ` rotateX(${-rotX}deg) rotateY(${rotY}deg)`;
+        });
 
-      anime({
-        targets: modal,
-        opacity: [0, 1],
-        duration: 300,
-        easing: "easeOutCubic"
+        img.addEventListener("mouseleave", () => {
+          mostrarImagen(indice); // Resetea transformaciones
+        });
       });
 
-      anime({
-        targets: contenedor,
-        opacity: [0, 1],
-        scale: [0.8, 1],
-        rotateY: ['45deg', '0deg'],
-        duration: 800,
-        easing: "easeOutExpo"
-      });
-
+      // Animación automática cada 5 segundos
       intervalo = setInterval(() => {
         indice = (indice + 1) % fotos.length;
-        anime({
-          targets: "#imagenGrande",
-          opacity: [1, 0],
-          scale: [1, 0.8],
-          rotateY: ['0deg', '90deg'],
-          duration: 400,
-          easing: "easeInCubic",
-          complete: () => {
-            imagen.src = `data:image/jpeg;base64,${fotos[indice]}`;
-            anime({
-              targets: "#imagenGrande",
-              opacity: [0, 1],
-              scale: [0.8, 1],
-              rotateY: ['-90deg', '0deg'],
-              duration: 400,
-              easing: "easeOutCubic"
-            });
-          }
-        });
-      }, 5000);
+        mostrarImagen(indice);
+      }, 3000);
+    }
+
+    // Posiciona las imágenes en modo 3D centrando una
+    function mostrarImagen(i) {
+      const imagenes = document.querySelectorAll(".carrusel-imagen");
+      imagenes.forEach((img, idx) => {
+        const offset = idx - i;
+        const scale = offset === 0 ? 1 : 0.7;
+        const translateX = offset * 250;
+        const rotateY = offset * -45;
+
+        img.style.zIndex = imagenes.length - Math.abs(offset);
+        img.style.transform = `translateX(${translateX}px) translateY(-50%) scale(${scale}) rotateY(${rotateY}deg)`;
+        img.style.opacity = offset < -2 || offset > 2 ? "0" : "1"; // Esconde si está lejos
+      });
     }
 
     function cerrarModal() {
       clearInterval(intervalo);
-      const modal = document.getElementById("modalImagen");
-      const imagen = document.getElementById("imagenGrande");
-      imagen.src = "";
-      modal.classList.add("hidden");
+      document.getElementById("modalImagen").classList.add("hidden");
+      document.getElementById("carrusel3D").innerHTML = "";
     }
-    // Movimiento 3D con el mouse
-    const imagenGrande = document.getElementById("imagenGrande");
 
-    imagenGrande.addEventListener("mousemove", (e) => {
-      const { width, height, left, top } = imagenGrande.getBoundingClientRect();
-      const x = e.clientX - left;
-      const y = e.clientY - top;
-      const rotX = ((y / height) - 0.5) * 10; // sensibilidad vertical
-      const rotY = ((x / width) - 0.5) * 10;  // sensibilidad horizontal
+    document.getElementById("modalImagen").addEventListener("click", function (e) {
+      const imagen = document.getElementById("imagenGrande");
+      const botonCerrar = e.target.closest("button");
 
-      imagenGrande.style.transform = `rotateX(${-rotX}deg) rotateY(${rotY}deg) scale(1.05)`;
+      if (!imagen.contains(e.target) && !botonCerrar) {
+        cerrarModal();
+      }
     });
 
-    imagenGrande.addEventListener("mouseleave", () => {
-      imagenGrande.style.transform = "rotateX(0deg) rotateY(0deg) scale(1)";
+    // Cerrar modal al presionar la tecla ESC
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape") {
+        cerrarModal();
+      }
+    });
+
+    document.getElementById("modalImagen").addEventListener("click", function (e) {
+      const esImagen = e.target.classList.contains("carrusel-imagen");
+      const esBoton = e.target.closest("button");
+
+      if (!esImagen && !esBoton) {
+        cerrarModal();
+      }
     });
 
   </script>
