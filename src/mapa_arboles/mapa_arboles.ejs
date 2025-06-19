@@ -11,6 +11,7 @@
       margin: 0;
       padding: 0;
       height: 100%;
+      overflow-x: hidden;
     }
 
     #video-fondo {
@@ -23,10 +24,21 @@
       z-index: -1;
     }
 
-    #map {
-      width: 100%;
+    #intro {
       height: 100vh;
-      z-index: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      text-align: center;
+      color: white;
+      background-color: rgba(0,0,0,0.5);
+      backdrop-filter: blur(4px);
+      z-index: 10;
+    }
+
+    #mapa {
+      height: 100vh;
     }
 
     #modal-arbol {
@@ -94,7 +106,6 @@
         padding: 1rem;
         font-size: 0.9rem;
       }
-
       .btn-carrusel {
         font-size: 0.8rem;
       }
@@ -109,10 +120,18 @@
     Tu navegador no soporta video HTML5.
   </video>
 
-  <!-- 🗺️ Mapa -->
-  <div id="map"></div>
+  <!-- ✨ Intro con texto -->
+  <div id="intro">
+    <h1 class="text-5xl font-bold drop-shadow-lg">Bienvenido al Mapa de Árboles</h1>
+    <p class="text-xl mt-4">Desplázate hacia abajo para explorar el mapa</p>
+  </div>
 
-  <!-- 🪵 Modal de árbol -->
+  <!-- 🗺️ Mapa -->
+  <div id="mapa">
+    <div id="map" style="width: 100%; height: 100%;"></div>
+  </div>
+
+  <!-- 🪵 Modal -->
   <div id="modal-arbol" class="flex">
     <div class="modal-contenido">
       <button class="cerrar-modal" onclick="cerrarModal()">×</button>
@@ -148,34 +167,32 @@
       attribution: '&copy; OpenStreetMap contributors'
     }).addTo(map);
 
-    if (arboles.length > 0) {
-      arboles.forEach(arbol => {
-        const color = especieColor(arbol.id_especie, arbol.id_subespecie);
-        const circle = L.circle([arbol.latitud, arbol.longitud], {
-          radius: arbol.grosor_copa * 10,
-          color,
-          fillColor: color,
-          fillOpacity: 0.5
-        }).addTo(map);
+    arboles.forEach(arbol => {
+      const color = especieColor(arbol.id_especie, arbol.id_subespecie);
+      const circle = L.circle([arbol.latitud, arbol.longitud], {
+        radius: arbol.grosor_copa,
+        color,
+        fillColor: color,
+        fillOpacity: 0.5
+      }).addTo(map);
 
-        circle.on('click', () => {
-          document.getElementById('modal-titulo').innerText = `${arbol.especie} ${arbol.subespecie || ''}`;
-          document.getElementById('modal-imagen').src = arbol.fotos?.[0]
-            ? `data:image/jpeg;base64,${arbol.fotos[0]}`
-            : '/assets/default.jpg';
+      circle.on('click', () => {
+        document.getElementById('modal-titulo').innerText = `${arbol.especie} ${arbol.subespecie || ''}`;
+        document.getElementById('modal-imagen').src = arbol.fotos?.[0]
+          ? `data:image/jpeg;base64,${arbol.fotos[0]}`
+          : '/assets/default.jpg';
 
-          document.getElementById('modal-altura').innerText = arbol.altura || 'N/A';
-          document.getElementById('modal-copa').innerText = arbol.grosor_copa || 'N/A';
-          document.getElementById('modal-tronco').innerText = arbol.grosor_tronco || 'N/A';
-          document.getElementById('modal-inspeccion').innerText = arbol.ultima_inspeccion || 'N/A';
-          document.getElementById('modal-observaciones').innerText = arbol.observaciones || 'Sin observaciones';
+        document.getElementById('modal-altura').innerText = arbol.altura || 'N/A';
+        document.getElementById('modal-copa').innerText = arbol.grosor_copa || 'N/A';
+        document.getElementById('modal-tronco').innerText = arbol.grosor_tronco || 'N/A';
+        document.getElementById('modal-inspeccion').innerText = arbol.ultima_inspeccion || 'N/A';
+        document.getElementById('modal-observaciones').innerText = arbol.observaciones || 'Sin observaciones';
 
-          imagenesActuales = arbol.fotos || [];
-          indiceActual = 0;
-          document.getElementById('modal-arbol').style.display = 'flex';
-        });
+        imagenesActuales = arbol.fotos || [];
+        indiceActual = 0;
+        document.getElementById('modal-arbol').style.display = 'flex';
       });
-    }
+    });
 
     function cerrarModal() {
       document.getElementById('modal-arbol').style.display = 'none';
