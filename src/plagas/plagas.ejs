@@ -3,57 +3,158 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registro de Plagas</title>
+    <title>Formulario de Plagas</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js"></script>
 </head>
-<body>
+<body class="bg-gray-100 min-h-screen flex flex-col justify-between">
 
-    <h1>Gestión de Plagas en Plagas</h1>
+    <nav class="bg-white shadow-md">
+        <div class="container mx-auto px-4 py-4 flex items-center justify-between">
+            <div class="text-2xl font-bold text-green-700" id="logo-plagas">🌳 Arbol App 🌳</div>
+            <ul class="flex space-x-6 text-gray-600 font-medium">
+                <li><a href="/" class="hover:text-green-600">Inicio</a></li>
+                <li><a href="/especies/nueva_especie" class="hover:text-green-600">Agregar Árbol</a></li>
+                <li><a href="/arboles/lista_arboles" class="hover:text-green-600">Lista de Árboles</a></li>
+                <li><a href="/plagas/formulario_plagas" class="hover:text-green-600">Formulario Plagas</a></li>
+                <li><a href="/mantenimiento/formulario" class="hover:text-green-600">Formulario Mantenimiento</a></li>
+                <li><a href="/mantenimiento/lista" class="hover:text-green-600">Lista Mantenimiento</a></li>
+            </ul>
+        </div>
+    </nav>
 
-    <fieldset>
-        <legend>Registrar Plaga en Árbol</legend>
-        <form>
-            <label for="arbol">Árbol afectado:</label>
-            <select name="arbol" id="arbol" required>
-                <option value="">Selecciona un árbol</option>
-                <option value="1">Árbol 1 - Ejemplo</option>
-                <option value="2">Árbol 2 - Ejemplo</option>
-            </select>
-    
-            <label for="plaga">Tipo de Plaga:</label>
-            <select name="plaga" id="plaga" required>
-                <option value="">Selecciona una plaga</option>
-                <option value="Hypsipyla grandella">Barrenador de brotes</option>
-                <option value="Tetranychus spp.">Araña roja</option>
-                <option value="Atta spp.">Hormiga arriera</option>
-                <option value="Phyllophaga spp.">Gallina ciega</option>
-                <option value="Cicadellidae">Chicharritas</option>
-                <option value="Glycaspis brimblecombei">Conchuela del eucalipto</option>
-                <option value="Xyleborus spp., Neoclytus spp.">Barrenador del tronco</option>
-                <option value="Mastigimas spp.">Piojo harinoso</option>
-                <option value="Hyblaea puera">Defoliador de la teca</option>
-            </select>
-    
-            <label for="infestacion">Grado de Afectación / Infestación:</label>
-            <select name="infestacion" id="infestacion" required>
-                <option value="">Selecciona una opción</option>
-                <option value="sin_plaga">Sin plaga</option>
-                <option value="tronco_leve">Plaga en tronco - Leve</option>
-                <option value="tronco_medio">Plaga en tronco - Medio</option>
-                <option value="tronco_abundante">Plaga en tronco - Abundante</option>
-                <option value="follaje_leve">Plaga en follaje - Leve</option>
-                <option value="follaje_medio">Plaga en follaje - Medio</option>
-                <option value="follaje_abundante">Plaga en follaje - Abundante</option>
-            </select>
-    
-            <label for="fecha">Fecha de Detección:</label>
-            <input type="date" name="fecha" id="fecha" required>
-    
-            <label for="tratamiento">Tratamiento Aplicado:</label>
-            <textarea name="tratamiento" id="tratamiento" rows="3" placeholder="¿Qué tratamiento se aplicó?"></textarea>
-    
-            <button type="submit">Registrar Plaga</button>
-        </form>
-    </fieldset>
+    <main class="flex-grow container mx-auto px-4 py-10">
+        <div class="bg-white p-8 rounded-xl shadow-lg">
+            <h1 id="titulo-plagas" class="text-3xl font-bold mb-4 text-center text-green-700">🐛 Formulario de Registro de Plagas 🐛</h1>
+            <p id="subtitulo-plagas" class="text-gray-600 mb-8 text-center">Aquí podrás registrar una plaga detectada en un árbol y su tratamiento.</p>
+
+            <fieldset id="fieldset-plagas" class="border-2 border-green-300 rounded-lg p-6">
+                <legend class="px-2 font-semibold text-green-700 text-lg">📝 Registrar Plaga y Tratamiento 📝</legend>
+
+                <form method="POST" action="/plagas/registrar_plaga" class="space-y-6 mt-6">
+                    <div>
+                        <label for="arbol" class="block text-gray-700 mb-2">Árbol afectado:</label>
+                        <select name="arbol" id="arbol" required
+                            class="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-green-400">
+                            <option value="">Selecciona un árbol</option>
+                            <option value="1">Árbol 1 - Ahuehuete</option>
+                            <option value="2">Árbol 2 - Jacaranda</option>
+                            <option value="3">Árbol 3 - Encino</option>
+                            </select>
+                    </div>
+
+                    <div>
+                        <label for="plaga" class="block text-gray-700 mb-2">Tipo de Plaga:</label>
+                        <select name="plaga" id="plaga" required
+                            class="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-green-400">
+                            <option value="">Selecciona una plaga</option>
+                            <option value="insectos">Insectos</option>
+                            <option value="hongos">Hongos</option>
+                            <option value="bacterias">Bacterias</option>
+                            <option value="virus">Virus</option>
+                            <option value="nematodos">Nematodos</option>
+                            <option value="acaro">Ácaros</option>
+                            <option value="desconocida">Desconocida</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label for="nivel" class="block text-gray-700 mb-2">Nivel de Afectación:</label>
+                        <select name="nivel" id="nivel" required
+                            class="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-green-400">
+                            <option value="leve">Leve</option>
+                            <option value="moderado">Moderado</option>
+                            <option value="grave">Grave</option>
+                            <option value="critico">Crítico</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label for="fecha" class="block text-gray-700 mb-2">Fecha de Detección:</label>
+                        <input type="date" name="fecha" id="fecha" required
+                            class="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-green-400">
+                    </div>
+
+                    <div>
+                        <label for="tratamiento" class="block text-gray-700 mb-2">Tratamiento Aplicado:</label>
+                        <textarea name="tratamiento" id="tratamiento" rows="4" placeholder="Describe el tratamiento aplicado, dosis, frecuencia, etc."
+                            class="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-green-400"></textarea>
+                    </div>
+
+                    <div>
+                        <label for="observaciones_plaga" class="block text-gray-700 mb-2">Observaciones Adicionales:</label>
+                        <textarea name="observaciones_plaga" id="observaciones_plaga" rows="3" placeholder="Añade cualquier otra observación relevante sobre la plaga o el árbol."
+                            class="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-green-400"></textarea>
+                    </div>
+
+                    <div class="text-center">
+                        <button type="submit"
+                            class="bg-green-500 text-white font-semibold px-6 py-2 rounded-full hover:bg-green-600 transition">
+                            Registrar Plaga
+                        </button>
+                    </div>
+                </form>
+            </fieldset>
+        </div>
+    </main>
+
+    <footer class="bg-white shadow-inner py-4 mt-8">
+        <div class="container mx-auto px-4 text-center">
+            <p class="text-gray-700 mb-2">Consulta el siguiente PDF:</p>
+            <a href="https://bioteca.biodiversidad.gob.mx/janium/Documentos/1480.pdf" target="_blank"
+                class="text-green-600 hover:underline font-semibold">
+                Flora del Valle de México
+            </a>
+        </div>
+    </footer>
+
+    <script>
+        // Animaciones iniciales para los elementos del formulario de plagas
+        anime({
+            targets: "#logo-plagas",
+            translateY: [-50, 0],
+            opacity: [0, 1],
+            duration: 1200,
+            easing: "easeOutElastic(1, .8)"
+        });
+
+        anime({
+            targets: "#titulo-plagas",
+            scale: [0.7, 1],
+            opacity: [0, 1],
+            delay: 300,
+            duration: 1000,
+            easing: "easeOutExpo"
+        });
+
+        anime({
+            targets: "#subtitulo-plagas",
+            translateX: [-30, 0],
+            opacity: [0, 1],
+            delay: 600,
+            duration: 800,
+            easing: "easeOutQuad"
+        });
+
+        anime({
+            targets: "#fieldset-plagas",
+            opacity: [0, 1],
+            translateY: [50, 0],
+            delay: 900,
+            duration: 900,
+            easing: "easeOutCubic"
+        });
+
+        // Opcional: animar los campos del formulario al cargarse
+        anime({
+            targets: '#fieldset-plagas div',
+            opacity: [0, 1],
+            translateY: [20, 0],
+            delay: anime.stagger(100, {start: 1000}), // Retraso escalonado para cada div
+            duration: 600,
+            easing: 'easeOutQuad'
+        });
+    </script>
 
 </body>
 </html>
