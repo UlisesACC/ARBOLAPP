@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Plagas</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js"></script>
+
+    <style>
+        .carrusel-imagen {
+            position: absolute;
+            transition: transform 0.6s ease, opacity 0.6s ease;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            max-height: 60vh;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+        }
+        .perspective-3d {
+            perspective: 1000px;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen flex flex-col justify-between">
+
+    <nav class="bg-white shadow-md">
+        <div class="container mx-auto px-4 py-4 flex items-center justify-between">
+            <div id="logo-lista-plagas" class="text-2xl font-bold text-green-700">🌳 Arbol App 🌳</div>
+            <ul class="flex space-x-6 text-gray-600 font-medium">
+                <li><a href="/" class="hover:text-green-600">Inicio</a></li>
+                <li><a href="/especies/nueva_especie" class="hover:text-green-600">Agregar Árbol</a></li>
+                <li><a href="/arboles/lista_arboles" class="hover:text-green-600">Lista de Árboles</a></li>
+                <li><a href="/plagas/formulario_plagas" class="hover:text-green-600">Formulario Plagas</a></li>
+                <li><a href="/plagas/lista_plagas" class="hover:text-green-600">Lista de Plagas</a></li> <li><a href="/mantenimiento/formulario" class="hover:text-green-600">Formulario Mantenimiento</a></li>
+                <li><a href="/mantenimiento/lista" class="hover:text-green-600">Lista Mantenimiento</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="flex-grow container mx-auto px-4 py-10">
+        <h1 id="titulo-lista-plagas" class="text-3xl font-bold mb-8 text-center text-green-700">📋 Lista de Plagas Registradas 📋</h1>
+        <p id="subtitulo-lista-plagas" class="text-gray-600 mb-8 text-center">Aquí puedes ver todas las plagas detectadas y sus tratamientos.</p>
+
+        <% if (plagas.length === 0) { %>
+            <p class="text-center text-gray-500 text-lg mt-8">No hay plagas registradas aún.</p>
+        <% } else { %>
+            <div class="overflow-x-auto">
+                <table id="tabla-plagas" class="min-w-full bg-white rounded-xl shadow-lg">
+                    <thead class="bg-green-500 text-white">
+                        <tr>
+                            <th class="py-3 px-6 text-left">ID Plaga</th>
+                            <th class="py-3 px-6 text-left">Árbol (ID)</th>
+                            <th class="py-3 px-6 text-left">Especie</th>
+                            <th class="py-3 px-6 text-left">Tipo de Plaga</th>
+                            <th class="py-3 px-6 text-left">Nivel</th>
+                            <th class="py-3 px-6 text-left">Fecha Detección</th>
+                            <th class="py-3 px-6 text-left">Tratamiento</th>
+                            <th class="py-3 px-6 text-left">Ubicación</th>
+                            <th class="py-3 px-6 text-left">Fotos</th> <th class="py-3 px-6 text-center">Acciones</th> </tr>
+                    </thead>
+                    <tbody class="text-gray-700">
+                        <% plagas.forEach(plaga => { %>
+                            <tr class="border-b fila-plaga" style="opacity:0;"> <td class="py-4 px-6"><%= plaga.id_plaga %></td>
+                                <td class="py-4 px-6"><%= plaga.numero_arbol %></td>
+                                <td class="py-4 px-6"><%= plaga.nombre_especie || '-' %></td>
+                                <td class="py-4 px-6"><%= plaga.tipo_plaga %></td>
+                                <td class="py-4 px-6"><%= plaga.nivel_afectacion %></td>
+                                <td class="py-4 px-6"><%= new Date(plaga.fecha_deteccion).toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' }) %></td>
+                                <td class="py-4 px-6"><%= plaga.tratamiento_aplicado || 'N/A' %></td>
+                                <td class="py-4 px-6"><%= plaga.colonia %>, <%= plaga.alcaldia %></td>
+                                
+                                <td class="py-4 px-6">
+                                    <% if (plaga.fotos_base64_plaga && plaga.fotos_base64_plaga.length > 0) { %>
+                                        <img src="data:image/jpeg;base64,<%= plaga.fotos_base64_plaga[0] %>"
+                                             class="w-20 h-20 object-cover rounded cursor-pointer hover:scale-105 transition" alt="foto plaga"
+                                             onclick='abrirCarruselPlagas(<%- JSON.stringify(plaga.fotos_base64_plaga) %>)'>
+                                    <% } else { %>
+                                        <span class="text-gray-400 italic">Sin fotos</span>
+                                    <% } %>
+                                </td>
+                                <td class="py-4 px-6 text-center flex gap-2 justify-center">
+                                    <form method="POST" action="/plagas/eliminar_plaga/<%= plaga.id_plaga %>">
+                                        <button type="submit" class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-full">
+                                            Eliminar
+                                        </button>
+                                    </form>
+                                    </td>
+                            </tr>
+                        <% }) %>
+                    </tbody>
+                </table>
+            </div>
+        <% } %>
+    </main>
+
+    <div id="modalImagenPlagas" class="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center hidden z-50">
+        <div id="contenedorModalPlagas" class="relative max-w-3xl w-full px-4 perspective-3d bg-transparent">
+            <button onclick="cerrarModalPlagas()"
+                class="absolute top-2 right-2 bg-red-500 text-white rounded-full px-3 py-1 text-xl font-bold hover:bg-red-600">✕</button>
+            <div id="carrusel3DPlagas" class="relative flex items-center justify-center h-[60vh] overflow-hidden">
+                </div>
+        </div>
+    </div>
+
+    <footer class="bg-white shadow-inner py-4 mt-8">
+        <div class="container mx-auto px-4 text-center text-gray-600">
+            <p>Consulta también:
+                <a href="https://bioteca.biodiversidad.gob.mx/janium/Documentos/1480.pdf" target="_blank"
+                    class="text-green-600 hover:underline font-semibold">Flora del Valle de México</a>
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        // Animaciones iniciales (adaptadas a los IDs de plagas)
+        anime({
+            targets: "#logo-lista-plagas",
+            translateY: [-30, 0],
+            opacity: [0, 1],
+            duration: 1000,
+            easing: "easeOutElastic(1, .8)"
+        });
+
+        anime({
+            targets: "#titulo-lista-plagas",
+            scale: [0.7, 1],
+            opacity: [0, 1],
+            delay: 400,
+            duration: 1000,
+            easing: "easeOutExpo"
+        });
+
+        anime({
+            targets: "#subtitulo-lista-plagas", // Añadida animación para subtítulo
+            translateX: [-30, 0],
+            opacity: [0, 1],
+            delay: 600,
+            duration: 800,
+            easing: "easeOutQuad"
+        });
+
+        anime({
+            targets: "#tabla-plagas", // Animación para la tabla
+            opacity: [0, 1],
+            translateY: [50, 0],
+            delay: 900,
+            duration: 900,
+            easing: "easeOutCubic"
+        });
+        
+        anime({
+            targets: ".fila-plaga", // Animación para cada fila
+            opacity: [0, 1],
+            translateY: [30, 0],
+            delay: anime.stagger(100, { start: 1200 }),
+            duration: 800,
+            easing: "easeOutCubic"
+        });
+
+        // --- Funcionalidad del Carrusel de Plagas (adaptada) ---
+        let fotosPlagas = [];
+        let indicePlagas = 0;
+        let intervaloPlagas = null;
+
+        function abrirCarruselPlagas(listaBase64) {
+            fotosPlagas = listaBase64;
+            indicePlagas = 0;
+
+            const modal = document.getElementById("modalImagenPlagas");
+            const carruselContainer = document.getElementById("carrusel3DPlagas"); // Contenedor para las imágenes del carrusel
+            carruselContainer.innerHTML = ''; // Limpiar imágenes anteriores
+
+            // Agregar imágenes al carrusel
+            fotosPlagas.forEach((foto, i) => {
+                const img = document.createElement("img");
+                img.src = `data:image/jpeg;base64,${foto}`;
+                img.className = "carrusel-imagen absolute top-1/2 left-1/2 max-h-[80vh] rounded-lg shadow-lg border-4 border-white transform transition-transform duration-500";
+                img.dataset.index = i;
+                img.style.zIndex = fotosPlagas.length - i;
+                img.addEventListener("click", () => mostrarImagenPlagas(i));
+                carruselContainer.appendChild(img);
+            });
+
+            modal.classList.remove("hidden");
+            mostrarImagenPlagas(indicePlagas);
+
+            // Efecto 3D con movimiento del mouse
+            document.querySelectorAll("#carrusel3DPlagas .carrusel-imagen").forEach(img => {
+                img.addEventListener("mousemove", (e) => {
+                    const { width, height, left, top } = img.getBoundingClientRect();
+                    const x = e.clientX - left;
+                    const y = e.clientY - top;
+                    const rotX = ((y / height) - 0.5) * 10;
+                    const rotY = ((x / width) - 0.5) * 10;
+                    img.style.transform += ` rotateX(${-rotX}deg) rotateY(${rotY}deg)`;
+                });
+
+                img.addEventListener("mouseleave", () => {
+                    mostrarImagenPlagas(indicePlagas); // Resetea transformaciones
+                });
+            });
+
+            // Animación automática cada 3 segundos
+            clearInterval(intervaloPlagas); // Limpiar cualquier intervalo anterior
+            intervaloPlagas = setInterval(() => {
+                indicePlagas = (indicePlagas + 1) % fotosPlagas.length;
+                mostrarImagenPlagas(indicePlagas);
+            }, 3000);
+        }
+
+        // Posiciona las imágenes en modo 3D centrando una
+        function mostrarImagenPlagas(i) {
+            const imagenes = document.querySelectorAll("#carrusel3DPlagas .carrusel-imagen");
+            imagenes.forEach((img, idx) => {
+                const offset = idx - i;
+                const scale = offset === 0 ? 1 : 0.7;
+                const translateX = offset * 250;
+                const rotateY = offset * -45;
+
+                img.style.zIndex = imagenes.length - Math.abs(offset);
+                img.style.transform = `translateX(${translateX}px) translateY(-50%) scale(${scale}) rotateY(${rotateY}deg)`;
+                img.style.opacity = offset < -2 || offset > 2 ? "0" : "1"; // Esconde si está lejos
+            });
+        }
+
+        function cerrarModalPlagas() {
+            clearInterval(intervaloPlagas);
+            document.getElementById("modalImagenPlagas").classList.add("hidden");
+            document.getElementById("carrusel3DPlagas").innerHTML = ""; // Limpiar contenido
+        }
+
+        // Eventos para cerrar el modal al hacer clic fuera o presionar ESC
+        document.getElementById("modalImagenPlagas").addEventListener("click", function (e) {
+            const esImagen = e.target.classList.contains("carrusel-imagen");
+            const esBoton = e.target.closest("button");
+            const esContenedorModal = e.target.id === "contenedorModalPlagas"; // Para el contenedor principal del modal
+
+            if (!esImagen && !esBoton && !esContenedorModal) { // Solo cerrar si no es click en imagen, botón o el contenedor del carrusel
+                cerrarModalPlagas();
+            }
+        });
+
+        document.addEventListener("keydown", function (e) {
+            if (e.key === "Escape") {
+                cerrarModalPlagas();
+            }
+        });
+    </script>
+</body>
+</html>
