@@ -38,3 +38,25 @@ Para subir los cambios es con
 git push origin abdiel
 git push gitlab abdiel
 ```
+Para agregar el css nota modificar la ruta segun el archivo y agregar los input.css
+input.css:
+```css
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+```
+(Para desarrolladores) i gnerar el css
+terminal:
+```bash
+npm install tailwindcss @tailwindcss/cli
+```
+terminal:
+```bash
+npx tailwindcss -i ./src/inicio/input.css -o ./src/inicio/output.css --minify
+npx tailwindcss -i ./src/formulario_arbol/input.css -o ./src/formulario_arbol/output.css --minify
+npx tailwindcss -i ./src/formulario_mantenimiento/input.css -o ./src/formulario_mantenimiento/output.css --minify
+npx tailwindcss -i ./src/agregar_especies/input.css -o ./src/agregar_especies/output.css --minify
+npx tailwindcss -i ./src/mapa_arboles/input.css -o ./src/mapa_arboles/output.css --minify
+npx tailwindcss -i ./src/plagas/input.css -o ./src/plagas/output.css --minify
+npx tailwindcss -i ./src/subespecies/input.css -o ./src/subespecies/output.css --minify
+```

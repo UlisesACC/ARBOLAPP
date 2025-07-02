@@ -20,6 +20,7 @@ app.listen(port, () => {
   console.log(`Servidor corriendo en http://localhost:${port}`);
 });
 //haciendo uso de los controllers
+app.use('/src', express.static(path.join(__dirname, 'src')));
 app.use('/', require('./src/inicio/controller.routes'));
 app.use('/especies', require('./src/agregar_especies/controller.routes'));
 app.use('/arboles', require('./src/formulario_arbol/controller.routes'));
