@@ -1,4 +1,3 @@
-/* 2025-03-10 16:34:20 [101 ms] */ 
 CREATE TABLE Especies (
     id_especie SERIAL PRIMARY KEY,
     nombre VARCHAR(100) UNIQUE NOT NULL,
@@ -28,13 +27,11 @@ CREATE TABLE DescripcionesOrigen (
     descripcion TEXT
     fotografia TEXT
 );
-/* 2025-03-10 16:34:26 [24 ms] */ 
 CREATE TABLE Subespecies (
     id_subespecie SERIAL PRIMARY KEY,
     id_especie INT REFERENCES Especies(id_especie) ON DELETE CASCADE,
     nombre VARCHAR(100) NOT NULL
 );
-/* 2025-03-10 16:34:28 [16 ms] */ 
 CREATE TABLE Zonas (
     id_zona SERIAL PRIMARY KEY,
     alcaldia VARCHAR(100),
@@ -44,7 +41,6 @@ CREATE TABLE Zonas (
     latitud DECIMAL(10,6),
     longitud DECIMAL(10,6)
 );
-/* 2025-03-10 16:34:40 [18 ms] */ 
 CREATE TABLE Expertos (
     id_experto SERIAL PRIMARY KEY,
     nombre_completo VARCHAR(255) NOT NULL,
@@ -52,7 +48,6 @@ CREATE TABLE Expertos (
     telefono VARCHAR(20),
     correo VARCHAR(100) UNIQUE
 );
-/* 2025-03-10 16:34:52 [19 ms] */ 
 CREATE TABLE Arboles (
     id_arbol SERIAL PRIMARY KEY,
     id_especie INT REFERENCES Especies(id_especie) ON DELETE SET NULL,
@@ -69,7 +64,6 @@ CREATE TABLE Arboles (
     observaciones TEXT,
     id_experto INT REFERENCES Expertos(id_experto) ON DELETE SET NULL
 );
-/* 2025-03-10 16:34:55 [20 ms] */ 
 CREATE TABLE HistorialInspecciones (
     id_inspeccion SERIAL PRIMARY KEY,
     id_arbol INT REFERENCES Arboles(id_arbol) ON DELETE CASCADE,
@@ -79,7 +73,6 @@ CREATE TABLE HistorialInspecciones (
     observaciones TEXT,
     id_experto INT REFERENCES Expertos(id_experto) ON DELETE SET NULL
 );
-/* 2025-03-10 16:34:57 [25 ms] */ 
 CREATE TABLE Ciudadanos (
     id_ciudadano SERIAL PRIMARY KEY,
     curp VARCHAR(18) UNIQUE NOT NULL,

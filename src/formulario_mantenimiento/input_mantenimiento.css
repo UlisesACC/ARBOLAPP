@@ -1,12 +1,11 @@
-/* Variables de diseño */
 :root {
-    --color-primary: #065f46; /* green-800 */
-    --color-primary-light: #059669; /* green-600 */
-    --color-primary-lighter: #ecfdf5; /* green-50 */
-    --color-text: #374151; /* gray-700 */
-    --color-text-light: #6b7280; /* gray-500 */
-    --color-border: #e5e7eb; /* gray-200 */
-    --color-bg: #f9fafb; /* gray-50 */
+    --color-primary: #065f46;
+    --color-primary-light: #059669;
+    --color-primary-lighter: #ecfdf5;
+    --color-text: #374151;
+    --color-text-light: #6b7280;
+    --color-border: #e5e7eb;
+    --color-bg: #f9fafb;
     --color-white: #ffffff;
     --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
     --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
@@ -14,7 +13,6 @@
     --transition: all 0.15s ease-in-out;
   }
   
-  /* Estilos base */
   body {
     font-family: 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
     line-height: 1.5;
@@ -22,7 +20,6 @@
     background-color: var(--color-bg);
   }
   
-  /* Contenedor principal */
   .container {
     width: 100%;
     max-width: 1280px;
@@ -30,7 +27,6 @@
     padding: 0 1rem;
   }
   
-  /* Títulos */
   h1 {
     font-size: 1.875rem;
     font-weight: 700;
@@ -38,7 +34,6 @@
     margin-bottom: 1.5rem;
   }
   
-  /* Formulario */
   form {
     background-color: var(--color-white);
     border-radius: var(--radius-md);
@@ -62,12 +57,10 @@
     width: 100%;
   }
   
-  /* Grupos de formulario */
   .form-group {
     margin-bottom: 1.5rem;
   }
   
-  /* Etiquetas */
   label {
     display: block;
     font-size: 0.875rem;
@@ -76,7 +69,6 @@
     margin-bottom: 0.5rem;
   }
   
-  /* Inputs y selects */
   input[type="text"],
   input[type="date"],
   input[type="file"],
@@ -105,12 +97,10 @@
     resize: vertical;
   }
   
-  /* Estilos para file inputs */
   input[type="file"] {
     padding: 0.375rem 0.75rem;
   }
   
-  /* Botón */
   button[type="submit"] {
     background-color: var(--color-primary-light);
     color: white;
@@ -132,12 +122,10 @@
     box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.3);
   }
   
-  /* Grid para fotos */
   .grid-cols-2 {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
   
-  /* Utilidades */
   .hidden {
     display: none;
   }
@@ -156,3 +144,4 @@
       grid-template-columns: repeat(2, minmax(0, 1fr));
     }
   }
+  

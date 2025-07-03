@@ -8,18 +8,14 @@ const port = process.env.PORT || 3000;
 const multer = require('multer');
 const upload = multer({ dest: 'uploads/' });
 
-// configuraciones Express
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'src'));
 
-// Servir archivos estÃ¡ticos desde la carpeta 'uploads'
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
-// iniciando el servidor
 app.listen(port, () => {
   console.log(`Servidor corriendo en http://localhost:${port}`);
 });
-//haciendo uso de los controllers
 app.use('/', require('./src/inicio/controller.routes'));
 app.use('/especies', require('./src/agregar_especies/controller.routes'));
 app.use('/arboles', require('./src/formulario_arbol/controller.routes'));
