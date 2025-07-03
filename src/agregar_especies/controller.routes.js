@@ -1,19 +1,15 @@
-//controller de agregar especies
 const express = require('express');
 const router = express.Router();
 const db = require('../db');
 const multer = require('multer');
 const upload = multer({ storage: multer.memoryStorage() });
 
-// Nueva especie - Formulario
-// Nueva especie - Formulario
 router.get('/nueva_especie', async (req, res) => {
   try {
     const hojasResult = await db.query('SELECT * FROM DescripcionesFormaHoja ORDER BY forma_hoja');
     const floresResult = await db.query('SELECT * FROM DescripcionesFormaFlor ORDER BY forma_flor');
     const origenesResult = await db.query('SELECT * FROM DescripcionesOrigen ORDER BY origen');
 
-    // Convertir fotografías BYTEA a base64
     const hojas = hojasResult.rows.map(row => ({
       ...row,
       fotografia_base64: row.fotografia ? row.fotografia.toString('base64') : null
@@ -40,7 +36,6 @@ router.get('/nueva_especie', async (req, res) => {
   }
 });
 
-// Lista de especies
 router.get('/lista_especies', async (req, res) => {
   try {
     const especiesResult = await db.query(`
@@ -55,7 +50,6 @@ router.get('/lista_especies', async (req, res) => {
   }
 });
 
-// Eliminar especie
 router.post('/eliminar_especie/:id', async (req, res) => {
   try {
     const { id } = req.params;
@@ -67,7 +61,6 @@ router.post('/eliminar_especie/:id', async (req, res) => {
   }
 });
 
-// Formulario para modificar especie
 router.get('/modificar_especie/:id', async (req, res) => {
   try {
     const { id } = req.params;
@@ -82,7 +75,6 @@ router.get('/modificar_especie/:id', async (req, res) => {
   }
 });
 
-// Guardar cambios de especie
 router.post('/modificar_especie/:id', upload.single('fotografia'), async (req, res) => {
   try {
     const { id } = req.params;
@@ -114,14 +106,13 @@ router.post('/modificar_especie/:id', upload.single('fotografia'), async (req, r
   }
 });
 
-// Guardar nueva especie
 router.post('/nueva_especie', upload.single('fotografia'), async (req, res) => {
   try {
     const { nombre, id_forma_hoja, id_forma_flor, id_origen, descripcion } = req.body;
 
     let fotografiaBuffer = null;
     if (req.file) {
-      fotografiaBuffer = req.file.buffer;  // ← aquí el cambio
+      fotografiaBuffer = req.file.buffer;
     }
 
     await db.query(`
@@ -137,7 +128,6 @@ router.post('/nueva_especie', upload.single('fotografia'), async (req, res) => {
 });
 
 
-// Subir fotografía a DescripcionesFormaHoja
 router.post('/subir_hoja', upload.single('fotografia'), async (req, res) => {
   try {
     const { forma_hoja, descripcion } = req.body;
@@ -155,7 +145,6 @@ router.post('/subir_hoja', upload.single('fotografia'), async (req, res) => {
   }
 });
 
-// Subir fotografía a DescripcionesFormaFlor
 router.post('/subir_flor', upload.single('fotografia'), async (req, res) => {
   try {
     const { forma_flor, descripcion } = req.body;
@@ -173,7 +162,6 @@ router.post('/subir_flor', upload.single('fotografia'), async (req, res) => {
   }
 });
 
-// Subir fotografía a DescripcionesOrigen
 router.post('/subir_origen', upload.single('fotografia'), async (req, res) => {
   try {
     const { origen, descripcion } = req.body;

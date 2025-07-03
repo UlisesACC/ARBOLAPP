@@ -4,7 +4,6 @@ const db = require('../db');
 
 router.get('/', async (req, res) => {
   try {
-    // Paso 1: Traer árboles con su información
     const arbolesRes = await db.query(`
       SELECT a.id_arbol, z.latitud, z.longitud, a.grosor_copa, a.altura, a.observaciones,
              a.grosor_tronco, a.ultima_inspeccion,
@@ -18,21 +17,18 @@ router.get('/', async (req, res) => {
 
     const arboles = arbolesRes.rows;
 
-    // Paso 2: Traer todas las fotos
     const fotosRes = await db.query(`
       SELECT id_arbol, encode(imagen, 'base64') AS imagen_base64
       FROM fotos_arbol
       ORDER BY fecha_subida ASC
     `);
 
-    // Paso 3: Agrupar fotos por árbol
     const fotosPorArbol = {};
     fotosRes.rows.forEach(f => {
       if (!fotosPorArbol[f.id_arbol]) fotosPorArbol[f.id_arbol] = [];
       fotosPorArbol[f.id_arbol].push(f.imagen_base64);
     });
 
-    // Paso 4: Añadir arreglo de fotos a cada árbol
     arboles.forEach(a => {
       a.fotos = fotosPorArbol[a.id_arbol] || [];
     });

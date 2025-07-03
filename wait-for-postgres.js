@@ -1,4 +1,3 @@
-// wait-for-postgres.js
 const net = require('net');
 
 const host = process.env.POSTGRES_HOST || 'postgres';
@@ -12,7 +11,7 @@ function check() {
   const socket = net.createConnection(port, host, () => {
     console.log("🟢 PostgreSQL está listo. Iniciando app...");
     socket.end();
-    require('./server.js'); // ejecuta tu app normalmente
+    require('./server.js');
   });
 
   socket.on('error', () => {

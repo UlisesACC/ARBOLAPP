@@ -112,7 +112,6 @@
     </footer>
 
     <script>
-        // Animaciones iniciales (adaptadas a los IDs de plagas)
         anime({
             targets: "#logo-lista-plagas",
             translateY: [-30, 0],
@@ -131,7 +130,7 @@
         });
 
         anime({
-            targets: "#subtitulo-lista-plagas", // Añadida animación para subtítulo
+            targets: "#subtitulo-lista-plagas",
             translateX: [-30, 0],
             opacity: [0, 1],
             delay: 600,
@@ -140,7 +139,7 @@
         });
 
         anime({
-            targets: "#tabla-plagas", // Animación para la tabla
+            targets: "#tabla-plagas",
             opacity: [0, 1],
             translateY: [50, 0],
             delay: 900,
@@ -149,7 +148,7 @@
         });
         
         anime({
-            targets: ".fila-plaga", // Animación para cada fila
+            targets: ".fila-plaga",
             opacity: [0, 1],
             translateY: [30, 0],
             delay: anime.stagger(100, { start: 1200 }),
@@ -157,7 +156,6 @@
             easing: "easeOutCubic"
         });
 
-        // --- Funcionalidad del Carrusel de Plagas (adaptada) ---
         let fotosPlagas = [];
         let indicePlagas = 0;
         let intervaloPlagas = null;
@@ -167,10 +165,9 @@
             indicePlagas = 0;
 
             const modal = document.getElementById("modalImagenPlagas");
-            const carruselContainer = document.getElementById("carrusel3DPlagas"); // Contenedor para las imágenes del carrusel
-            carruselContainer.innerHTML = ''; // Limpiar imágenes anteriores
+            const carruselContainer = document.getElementById("carrusel3DPlagas");
+            carruselContainer.innerHTML = '';
 
-            // Agregar imágenes al carrusel
             fotosPlagas.forEach((foto, i) => {
                 const img = document.createElement("img");
                 img.src = `data:image/jpeg;base64,${foto}`;
@@ -184,7 +181,6 @@
             modal.classList.remove("hidden");
             mostrarImagenPlagas(indicePlagas);
 
-            // Efecto 3D con movimiento del mouse
             document.querySelectorAll("#carrusel3DPlagas .carrusel-imagen").forEach(img => {
                 img.addEventListener("mousemove", (e) => {
                     const { width, height, left, top } = img.getBoundingClientRect();
@@ -196,19 +192,17 @@
                 });
 
                 img.addEventListener("mouseleave", () => {
-                    mostrarImagenPlagas(indicePlagas); // Resetea transformaciones
+                    mostrarImagenPlagas(indicePlagas);
                 });
             });
 
-            // Animación automática cada 3 segundos
-            clearInterval(intervaloPlagas); // Limpiar cualquier intervalo anterior
+            clearInterval(intervaloPlagas);
             intervaloPlagas = setInterval(() => {
                 indicePlagas = (indicePlagas + 1) % fotosPlagas.length;
                 mostrarImagenPlagas(indicePlagas);
             }, 3000);
         }
 
-        // Posiciona las imágenes en modo 3D centrando una
         function mostrarImagenPlagas(i) {
             const imagenes = document.querySelectorAll("#carrusel3DPlagas .carrusel-imagen");
             imagenes.forEach((img, idx) => {
@@ -219,23 +213,22 @@
 
                 img.style.zIndex = imagenes.length - Math.abs(offset);
                 img.style.transform = `translateX(${translateX}px) translateY(-50%) scale(${scale}) rotateY(${rotateY}deg)`;
-                img.style.opacity = offset < -2 || offset > 2 ? "0" : "1"; // Esconde si está lejos
+                img.style.opacity = offset < -2 || offset > 2 ? "0" : "1";
             });
         }
 
         function cerrarModalPlagas() {
             clearInterval(intervaloPlagas);
             document.getElementById("modalImagenPlagas").classList.add("hidden");
-            document.getElementById("carrusel3DPlagas").innerHTML = ""; // Limpiar contenido
+            document.getElementById("carrusel3DPlagas").innerHTML = "";
         }
 
-        // Eventos para cerrar el modal al hacer clic fuera o presionar ESC
         document.getElementById("modalImagenPlagas").addEventListener("click", function (e) {
             const esImagen = e.target.classList.contains("carrusel-imagen");
             const esBoton = e.target.closest("button");
-            const esContenedorModal = e.target.id === "contenedorModalPlagas"; // Para el contenedor principal del modal
+            const esContenedorModal = e.target.id === "contenedorModalPlagas";
 
-            if (!esImagen && !esBoton && !esContenedorModal) { // Solo cerrar si no es click en imagen, botón o el contenedor del carrusel
+            if (!esImagen && !esBoton && !esContenedorModal) {
                 cerrarModalPlagas();
             }
         });

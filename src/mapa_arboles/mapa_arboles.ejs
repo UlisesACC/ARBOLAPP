@@ -114,24 +114,20 @@
 </head>
 <body>
 
-  <!-- 🎥 Video de fondo -->
   <video id="video-fondo" autoplay muted loop playsinline>
     <source src="/assets/fondo.mp4" type="video/mp4">
     Tu navegador no soporta video HTML5.
   </video>
 
-  <!-- ✨ Intro con texto -->
   <div id="intro">
     <h1 class="text-5xl font-bold drop-shadow-lg">Bienvenido al Mapa de Árboles</h1>
     <p class="text-xl mt-4">Desplázate hacia abajo para explorar el mapa</p>
   </div>
 
-  <!-- 🗺️ Mapa -->
   <div id="mapa">
     <div id="map" style="width: 100%; height: 100%;"></div>
   </div>
 
-  <!-- 🪵 Modal -->
   <div id="modal-arbol" class="flex">
     <div class="modal-contenido">
       <button class="cerrar-modal" onclick="cerrarModal()">×</button>
@@ -147,7 +143,6 @@
     </div>
   </div>
 
-  <!-- 🎠 Carrusel -->
   <div id="carrusel" class="hidden flex">
     <img id="img-carrusel" class="carrusel-img" src="" alt="Imagen del árbol">
     <div class="carrusel-controles">

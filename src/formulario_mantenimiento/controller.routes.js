@@ -2,9 +2,8 @@ const express = require('express');
 const router = express.Router();
 const db = require('../db');
 const multer = require('multer');
-const upload = multer({ dest: 'uploads/' });  // Aquí multer guarda temporalmente los archivos
+const upload = multer({ dest: 'uploads/' });
 
-// Redireccionar al formulario de mantenimiento
 router.get('/formulario', async (req, res) => {
   try {
 
@@ -16,7 +15,6 @@ router.get('/formulario', async (req, res) => {
   }
 });
 
-// Guardar datos del mantenimiento de un arbol
 router.post(
   '/registrar_mantenimiento',
   upload.fields([
@@ -28,8 +26,8 @@ router.post(
       const {
         fecha,
         tipo_intervencion,
-        tipo_intervencion_detalle, // ⚠️ campo del formulario
-        causa_intervencion,        // ⚠️ campo del formulario
+        tipo_intervencion_detalle,
+        causa_intervencion,
         destino_material,
         ubicacion_original,
         nueva_ubicacion,
@@ -87,7 +85,6 @@ router.post(
 
 
 
-// Listar todos los mantenimientos que hay 
 router.get('/lista', async (req, res) => {
   try {
     const result = await db.query('SELECT * FROM Mantenimientos ORDER BY fecha DESC');

@@ -109,7 +109,6 @@
     </footer>
 
     <script>
-        // Animaciones iniciales para los elementos del formulario de plagas
         anime({
             targets: "#logo-plagas",
             translateY: [-50, 0],
@@ -145,12 +144,11 @@
             easing: "easeOutCubic"
         });
 
-        // Opcional: animar los campos del formulario al cargarse
         anime({
             targets: '#fieldset-plagas div',
             opacity: [0, 1],
             translateY: [20, 0],
-            delay: anime.stagger(100, {start: 1000}), // Retraso escalonado para cada div
+            delay: anime.stagger(100, {start: 1000}),
             duration: 600,
             easing: 'easeOutQuad'
         });

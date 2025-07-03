@@ -23,7 +23,6 @@ router.get('/formulario_plagas', async (req, res) => {
     }
 });
 
-// Registrar nueva plaga
 router.post('/registrar_plaga', async (req, res) => {
     try {
         const { arbol, plaga, nivel, fecha, tratamiento, observaciones_plaga } = req.body;
@@ -40,7 +39,6 @@ router.post('/registrar_plaga', async (req, res) => {
     }
 });
 
-// Listar plagas
 router.get('/lista_plagas', async (req, res) => {
     try {
         const plagas = await db.query(`

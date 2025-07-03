@@ -10,7 +10,6 @@
 
 <body class="bg-green-50 min-h-screen flex flex-col">
 
-  <!-- NAVBAR -->
   <nav class="bg-white shadow-md sticky top-0 z-50">
     <div class="container mx-auto px-4 py-4 flex items-center justify-between">
       <div class="text-xl font-bold text-green-700">🎄 Arbol App 🎄</div>
@@ -72,7 +71,6 @@
   </main>
 
   <script>
-    // Filtrar dinámico
     const buscador = document.getElementById('buscador');
     buscador.addEventListener('keyup', function () {
       const filtro = buscador.value.toLowerCase();
@@ -93,7 +91,6 @@
       });
     });
 
-    // Confirmar antes de eliminar
     function confirmarEliminar(event) {
       if (!confirm('¿Seguro que quieres eliminar esta subespecie?')) {
         event.preventDefault();

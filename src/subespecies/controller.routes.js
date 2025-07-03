@@ -2,7 +2,6 @@ const express = require('express');
 const router = express.Router();
 const db = require('../db');
 
-// Devolver subespecies según id de especie (respuesta en JSON)
 router.get('/subespecies/:id_especie', async (req, res) => {
   try {
     const { id_especie } = req.params;
@@ -17,7 +16,6 @@ router.get('/subespecies/:id_especie', async (req, res) => {
   }
 });
 
-// Mostrar formulario para nueva subespecie
 router.get('/nueva_subespecie', async (req, res) => {
   try {
     const especiesResult = await db.query('SELECT id_especie, nombre FROM Especies ORDER BY nombre');
@@ -28,7 +26,6 @@ router.get('/nueva_subespecie', async (req, res) => {
   }
 });
 
-// Guardar nueva subespecie
 router.post('/nueva_subespecie', async (req, res) => {
   try {
     const { id_especie, nombre_subespecie } = req.body;
@@ -45,7 +42,6 @@ router.post('/nueva_subespecie', async (req, res) => {
   }
 });
 
-// Mostrar lista de subespecies
 router.get('/lista_subespecies', async (req, res) => {
   try {
     const subespeciesResult = await db.query(`
@@ -61,7 +57,6 @@ router.get('/lista_subespecies', async (req, res) => {
   }
 });
 
-// Eliminar subespecie
 router.post('/eliminar_subespecie/:id', async (req, res) => {
   try {
     const { id } = req.params;
@@ -73,7 +68,6 @@ router.post('/eliminar_subespecie/:id', async (req, res) => {
   }
 });
 
-// Mostrar formulario para modificar subespecie
 router.get('/modificar_subespecie/:id', async (req, res) => {
   try {
     const { id } = req.params;
@@ -101,7 +95,6 @@ router.get('/modificar_subespecie/:id', async (req, res) => {
   }
 });
 
-// Guardar cambios de subespecie
 router.post('/modificar_subespecie/:id', async (req, res) => {
   try {
     const { id } = req.params;

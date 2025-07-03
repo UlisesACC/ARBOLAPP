@@ -2,10 +2,9 @@ const express = require('express');
 const router = express.Router();
 const db = require('../db');
 const multer = require('multer');
-const upload = multer({ storage: multer.memoryStorage() }); // almacenamiento en memoria
+const upload = multer({ storage: multer.memoryStorage() });
 const fs = require('fs');
 
-// Mostrar formulario de registro
 router.get('/formulario', async (req, res) => {
   try {
     const especies = await db.query('SELECT * FROM Especies ORDER BY nombre');
@@ -17,7 +16,6 @@ router.get('/formulario', async (req, res) => {
   }
 });
 
-// Registrar árbol y múltiples fotos
 router.post('/registrar_arbol', upload.array('fotografias'), async (req, res) => {
   try {
     const {
@@ -26,7 +24,6 @@ router.post('/registrar_arbol', upload.array('fotografias'), async (req, res) =>
       grosor_tronco, altura, grosor_copa, observaciones
     } = req.body;
 
-    // Verificar o insertar zona
     let id_zona;
     const zonaExistente = await db.query(
       `SELECT id_zona FROM Zonas WHERE alcaldia = $1 AND colonia = $2 AND calle = $3 AND numero = $4 AND codigo_postal = $5`,
@@ -43,13 +40,11 @@ router.post('/registrar_arbol', upload.array('fotografias'), async (req, res) =>
       id_zona = nuevaZona.rows[0].id_zona;
     }
 
-    // Insertar árbol
     await db.query(`
       INSERT INTO Arboles (id_arbol, id_especie, id_subespecie, id_zona, grosor_tronco, altura, grosor_copa, observaciones)
       VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
     `, [numero_arbol, especie, subespecie, id_zona, grosor_tronco || null, altura || null, grosor_copa || null, observaciones]);
 
-    // Insertar fotos (si existen)
     if (req.files?.length > 0) {
       for (const file of req.files) {
         await db.query(`
@@ -66,8 +61,6 @@ router.post('/registrar_arbol', upload.array('fotografias'), async (req, res) =>
   }
 });
 
-// Listar árboles con su foto más reciente
-// Listar árboles con todas sus fotos
 router.get('/lista_arboles', async (req, res) => {
   try {
     const arboles = await db.query(`
@@ -91,7 +84,6 @@ router.get('/lista_arboles', async (req, res) => {
 });
 
 
-// Modificar árbol
 router.get('/modificar_arbol/:id', async (req, res) => {
   try {
     const { id } = req.params;
@@ -122,7 +114,6 @@ router.get('/modificar_arbol/:id', async (req, res) => {
 });
 
 
-// Guardar cambios y agregar fotos nuevas
 router.post('/modificar_arbol/:id', upload.array('fotografias'), async (req, res) => {
   try {
     const { id } = req.params;
@@ -151,7 +142,6 @@ router.post('/modificar_arbol/:id', upload.array('fotografias'), async (req, res
   }
 });
 
-// Eliminar árbol
 router.post('/eliminar_arbol/:id', async (req, res) => {
   try {
     const { id } = req.params;
@@ -163,11 +153,9 @@ router.post('/eliminar_arbol/:id', async (req, res) => {
   }
 });
 
-// Eliminar una foto individual
 router.post('/eliminar_foto/:id_foto', async (req, res) => {
   try {
     const { id_foto } = req.params;
-    // Obtener el id_arbol para redirigir correctamente
     const foto = await db.query('SELECT id_arbol FROM fotos_arbol WHERE id_foto = $1', [id_foto]);
     if (foto.rows.length === 0) return res.status(404).send('Foto no encontrada');
 
